@@ -15,4 +15,14 @@ class Settings:
 		# Screen settings
 		self.screen_width = 1100
 		self.screen_height = 700
-		self.bg_colour = yellow
+		self.bg_colour = black
+
+		# ship settings
+		self.ship_speed = 2
+
+		# Bullet settings
+		self.bullet_speed = 3.0
+		self.bullet_width = 3
+		self.bullet_height = 15
+		self.bullet_colour = yellow
+		self.bullets_allowed = 15
