@@ -17,7 +17,7 @@ class Ship:
 		self.image = jet
 		self.rect = self.image.get_rect()
 
-		# Start each ship at the bottom.
+		# Start ship at the bottom.
 
 		self.rect.midbottom = self.screen_rect.midbottom
 
