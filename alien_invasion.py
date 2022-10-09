@@ -5,7 +5,6 @@ from settings import Settings
 from ship import Ship
 from bullets import Bullet
 from alien import Alien
-from stars import Star
 
 # make the squares eventually pink and light pink, cyan and light cyan
 # black background, white and yellow text
@@ -52,48 +51,16 @@ class AlienInvasion:
 
 		
 		self._create_fleet()
-		self._create_star_fleet()
 
 	def run_game(self):
 		"""Start the main loop for the game"""
 		while True:
 			self._check_events()
 			self.ship.update()
-			self._update_stars()
 			self._update_bullets()
 			self._update_aliens()
 			self._update_screen()
 			
-	def _create_star_fleet(self):
-		"""Creates grid of stars"""
-		star = Star(self)
-		star_width, star_height = star.rect.size
-		available_space_x = self.settings.screen_width - (2 * star_width)
-		number_stars_x = randint(100, 1000)
-
-		# Determine number of rows
-		available_space_y = (self.settings.screen_height)
-		number_rows = available_space_y // (5 * star_height)
-
-		# Create the fleet of aliens
-		for row_number in range(number_rows):
-			for star_number in range(number_stars_x):
-				self._create_stars(star_number, row_number)
-
-	def _create_stars(self, star_number, row_number):
-		"""Create star and place it in the row"""
-		star = Star(self)
-		star_width, star_height = star.rect.size
-		star.x = star_width + 10 * star_width * star_number
-		star.rect.x = star.x
-		star.rect.y = star.rect.height + 10 * star.rect.height * row_number
-		self.stars.add(star)	
-
-
-	def _update_stars(self):
-		"""Update bullet pos"""
-		self.stars.update()
-
 
 	def _update_aliens(self):
 		"""check fleet edge, update pos"""
@@ -208,7 +175,6 @@ class AlienInvasion:
 		for bullet in self.bullets.sprites():
 			bullet.draw_bullet()
 		self.aliens.draw(self.screen)
-		self.stars.draw(self.screen)
 
 		pygame.display.flip()
 
