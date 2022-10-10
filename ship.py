@@ -1,6 +1,6 @@
 import pygame
 
-jet_image = pygame.image.load('Python_work/alien_invasion/images/rocket.bmp')
+jet_image = pygame.image.load('Python_work/alien_invasion/images/space.bmp')
 jet = pygame.transform.scale(jet_image, (60, 80))
 
 class Ship:

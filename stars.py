@@ -21,7 +21,7 @@ class Star(Sprite):
 		self.y = float(self.rect.y)
 
 	def update(self):
-		"""Moves star in downwards direction"""
+		"""Moves stars in downwards direction"""
 		self.y += self.settings.star_speed
 
 		self.rect.y = self.y

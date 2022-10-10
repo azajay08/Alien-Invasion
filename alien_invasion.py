@@ -133,7 +133,7 @@ class AlienInvasion:
 				self.stars.remove(star)
 			
 	def _check_events(self):
-		"""responf to keypresses and mouse"""
+		"""Respond to keypresses and mouse"""
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				sys.exit()
@@ -165,7 +165,7 @@ class AlienInvasion:
 			self.bullets.add(new_bullet)
 
 	def _star_launch(self):
-		"""Create a new bullet and add it to the bullets group"""
+		"""Create a new star and add it to the star group"""
 		if len(self.stars) < 300:
 			new_star = Star(self)
 			self.stars.add(new_star)
