@@ -118,7 +118,7 @@ class AlienInvasion:
 		for bullet in self.bullets.copy():
 			if bullet.rect.bottom <= 0:
 				self.bullets.remove(bullet)
-			print(len(self.bullets))
+			#print(len(self.bullets))
 
 		# Check for any bullets that hit - get rid 
 		collisions = pygame.sprite.groupcollide(
@@ -131,7 +131,6 @@ class AlienInvasion:
 		for star in self.stars.copy():
 			if star.rect.bottom <= 0:
 				self.stars.remove(star)
-			print(len(self.stars))
 			
 	def _check_events(self):
 		"""responf to keypresses and mouse"""
