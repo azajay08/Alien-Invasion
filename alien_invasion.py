@@ -5,6 +5,7 @@ from settings import Settings
 from ship import Ship
 from bullets import Bullet
 from alien import Alien
+from stars import Star
 
 # make the squares eventually pink and light pink, cyan and light cyan
 # black background, white and yellow text
@@ -48,13 +49,14 @@ class AlienInvasion:
 		self.ship = Ship(self)
 		self.bullets = pygame.sprite.Group()
 		self.aliens = pygame.sprite.Group()
-
+		
 		
 		self._create_fleet()
 
 	def run_game(self):
 		"""Start the main loop for the game"""
 		while True:
+			self._update_stars()
 			self._check_events()
 			self.ship.update()
 			self._update_bullets()
@@ -122,7 +124,14 @@ class AlienInvasion:
 		collisions = pygame.sprite.groupcollide(
 			self.bullets, self.aliens, True, True)
 
-			
+	def _update_stars(self):
+		"""Update star pos"""
+		self.stars.update()
+			# Get rid of stars
+		for star in self.stars.copy():
+			if star.rect.bottom <= 0:
+				self.stars.remove(star)
+			print(len(self.stars))
 			
 	def _check_events(self):
 		"""responf to keypresses and mouse"""
@@ -133,6 +142,7 @@ class AlienInvasion:
 				self._check_keydown_events(event)
 			elif event.type == pygame.KEYUP:
 				self._check_keyup_events(event)
+		self._star_launch()
 
 	def _check_keydown_events(self, event):
 		"""Respond to key presses"""
@@ -155,6 +165,12 @@ class AlienInvasion:
 			new_bullet = Bullet(self)
 			self.bullets.add(new_bullet)
 
+	def _star_launch(self):
+		"""Create a new bullet and add it to the bullets group"""
+		if len(self.stars) < 300:
+			new_star = Star(self)
+			self.stars.add(new_star)
+
 
 	def _check_keyup_events(self, event):
 		"""Responds to key release"""
@@ -171,6 +187,8 @@ class AlienInvasion:
 	def _update_screen(self):
 		"""Update images on screen, flip to the new screen."""
 		self.screen.fill(self.settings.bg_colour)
+		for star in self.stars.sprites():
+			star.draw_star()
 		self.ship.blitme()
 		for bullet in self.bullets.sprites():
 			bullet.draw_bullet()
