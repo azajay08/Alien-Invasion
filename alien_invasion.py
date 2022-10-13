@@ -61,29 +61,43 @@ class AlienInvasion:
 	def run_game(self):
 		"""Start the main loop for the game"""
 		while True:
-			self._update_stars()
 			self._check_events()
-			self.ship.update()
-			self._update_bullets()
-			self._update_aliens()
+			self._update_stars()
+			if self.stats.game_active == True:
+				self.ship.update()
+				self._update_bullets()
+				self._update_aliens()
+
 			self._update_screen()
 			
+
+	def _check_aliens_bottom(self):
+		"""Cheack if aliens have reached the bottom"""
+		screen_rect = self.screen.get_rect()
+		for alien in self.aliens.sprites():
+			if alien.rect.bottom >= screen_rect.bottom:
+			# Treat this the same as if the ship got hit
+				self._ship_hit()
+				break
+
 
 	def _ship_hit(self):
 		"""Respond to ship being hit"""
 		# Decrement ships_left
-		self.stats.ships_left -= 1
+		if self.stats.ships_left > 0:
+			self.stats.ships_left -= 1
 
-		# Get rid of any remaining aliens and bullets
-		self.aliens.empty()
-		self.bullets.empty()
+			# Get rid of any remaining aliens and bullets
+			self.aliens.empty()
+			self.bullets.empty()
 
-		# Create new fleet and center the ship
-		self._create_fleet()
-		self.ship.center_ship()
-
-		# Pause.
-		#sleep(0.5)
+			# Create new fleet and center the ship
+			self._create_fleet()
+			self.ship.center_ship()
+			# Pause.
+			sleep(0.5)
+		else:
+			self.stats.game_active = False
 
 	def _update_aliens(self):
 		"""check fleet edge, update pos"""
@@ -93,6 +107,8 @@ class AlienInvasion:
 		# Look for alien ship collisions
 		if pygame.sprite.spritecollideany(self.ship, self.aliens):
 			self._ship_hit()
+		# Look for aliens hitting bottom of screen
+		self._check_aliens_bottom()
 
 	def _check_fleet_edges(self):
 		"""Respond if any aliens reach the edge"""
@@ -159,6 +175,7 @@ class AlienInvasion:
 
 	def _update_stars(self):
 		"""Update star pos"""
+		self._star_launch()
 		self.stars.update()
 			# Get rid of stars
 		for star in self.stars.copy():
@@ -174,7 +191,6 @@ class AlienInvasion:
 				self._check_keydown_events(event)
 			elif event.type == pygame.KEYUP:
 				self._check_keyup_events(event)
-		self._star_launch()
 
 	def _check_keydown_events(self, event):
 		"""Respond to key presses"""
