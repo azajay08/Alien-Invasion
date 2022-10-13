@@ -9,6 +9,7 @@ from stars import Star
 from time import sleep
 from game_stats import GameStats
 from button import Button
+from scoreboard import Scoreboard
 
 # make the squares eventually pink and light pink, cyan and light cyan
 # black background, white and yellow text
@@ -49,7 +50,9 @@ class AlienInvasion:
 		pygame.display.set_caption("Alien Invasion!")
 
 		# Create an instance to store game stats
+		# Create scoreboard
 		self.stats = GameStats(self)
+		self.sb = Scoreboard(self)
 
 		self.stars = pygame.sprite.Group()
 		self.ship = Ship(self)
@@ -268,6 +271,8 @@ class AlienInvasion:
 		for bullet in self.bullets.sprites():
 			bullet.draw_bullet()
 		self.aliens.draw(self.screen)
+		# Draw the score info
+		self.sb.show_score()
 		# Draw the play button if the game is inactive
 		if not self.stats.game_active:
 			self.play_button.draw_button()
