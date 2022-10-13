@@ -6,6 +6,8 @@ from ship import Ship
 from bullets import Bullet
 from alien import Alien
 from stars import Star
+from time import sleep
+from game_stats import GameStats
 
 # make the squares eventually pink and light pink, cyan and light cyan
 # black background, white and yellow text
@@ -45,6 +47,9 @@ class AlienInvasion:
 			self.settings.screen_width, self.settings.screen_height))
 		pygame.display.set_caption("Alien Invasion!")
 
+		# Create an instance to store game stats
+		self.stats = GameStats(self)
+
 		self.stars = pygame.sprite.Group()
 		self.ship = Ship(self)
 		self.bullets = pygame.sprite.Group()
@@ -64,6 +69,22 @@ class AlienInvasion:
 			self._update_screen()
 			
 
+	def _ship_hit(self):
+		"""Respond to ship being hit"""
+		# Decrement ships_left
+		self.stats.ships_left -= 1
+
+		# Get rid of any remaining aliens and bullets
+		self.aliens.empty()
+		self.bullets.empty()
+
+		# Create new fleet and center the ship
+		self._create_fleet()
+		self.ship.center_ship()
+
+		# Pause.
+		#sleep(0.5)
+
 	def _update_aliens(self):
 		"""check fleet edge, update pos"""
 		self._check_fleet_edges()
@@ -71,7 +92,7 @@ class AlienInvasion:
 
 		# Look for alien ship collisions
 		if pygame.sprite.spritecollideany(self.ship, self.aliens):
-			print("Ship Hit!!!")
+			self._ship_hit()
 
 	def _check_fleet_edges(self):
 		"""Respond if any aliens reach the edge"""
@@ -98,7 +119,7 @@ class AlienInvasion:
 		# Determine number of rows
 		ship_height = self.ship.rect.height
 		available_space_y = (self.settings.screen_height -
-								(10 * alien_height) - ship_height)
+								(7 * alien_height) - ship_height)
 		number_rows = available_space_y // (2 * alien_height)
 
 		# Create the fleet of aliens
@@ -161,10 +182,10 @@ class AlienInvasion:
 			self.ship.moving_right = True
 		elif event.key == pygame.K_LEFT:
 			self.ship.moving_left = True
-		elif event.key == pygame.K_UP:
-			self.ship.moving_up = True
-		elif event.key == pygame.K_DOWN:
-			self.ship.moving_down = True
+		# elif event.key == pygame.K_UP:
+		# 	self.ship.moving_up = True
+		# elif event.key == pygame.K_DOWN:
+		# 	self.ship.moving_down = True
 		elif event.key == pygame.K_q:
 			sys.exit()
 		elif event.key == pygame.K_SPACE:
@@ -189,10 +210,10 @@ class AlienInvasion:
 			self.ship.moving_right = False
 		elif event.key == pygame.K_LEFT:
 			self.ship.moving_left = False
-		elif event.key == pygame.K_UP:
-			self.ship.moving_up = False
-		elif event.key == pygame.K_DOWN:
-			self.ship.moving_down = False
+		# elif event.key == pygame.K_UP:
+		# 	self.ship.moving_up = False
+		# elif event.key == pygame.K_DOWN:
+		# 	self.ship.moving_down = False
 
 
 	def _update_screen(self):
