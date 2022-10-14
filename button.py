@@ -5,7 +5,8 @@ light_cyan = (0,238,238)
 deep_pink = (255,20,147)
 purple = (155,48,255)
 dark_pink = (139,10,80)
-font_path = "Python_work/alien_invasion/robot-9000-font/Robot9000Italic-YzxE8.ttf"
+font_path = "Python_work/alien_invasion/robot-9000-font/Robot9000.ttf"
+test_font = "Python_work/disco-duck-font/Disco.otf"
 
 class Button:
 

@@ -11,7 +11,7 @@ purple = (155,48,255)
 yellow = (255,165,0)
 red = (240, 8, 8)
 
-font_path = "Python_work/alien_invasion/robot-9000-font/Robot9000Italic-YzxE8.ttf"
+font_path = "Python_work/alien_invasion/robot-9000-font/Robot9000.ttf"
 
 class Scoreboard:
 	"""A class to report scoring info"""
