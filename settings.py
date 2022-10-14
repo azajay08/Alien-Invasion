@@ -1,3 +1,6 @@
+import pygame
+import os
+
 black = (0, 0, 0)
 white = (245,245,245)
 light_cyan = (0,238,238)
@@ -26,7 +29,7 @@ class Settings:
 		self.bullet_width = 5
 		self.bullet_height = 15
 		self.bullet_colour = deep_pink
-		self.bullets_allowed = 5
+		self.bullets_allowed = 10
 
 		# Alien settings
 		self.fleet_drop_speed = 10
@@ -46,6 +49,11 @@ class Settings:
 		self.score_scale = 1.5
 
 		self.initialize_dynamic_settings()
+
+		# Sounds
+		s = os.path.dirname(os.path.abspath(__file__))
+		self.laser = pygame.mixer.Sound(os.path.join(s, 'sound', "laser.ogg"))
+		# self.music = pygame.mixer.music.load(os.path.join(s, 'synthpop.ogg'))
 
 
 	def initialize_dynamic_settings(self):

@@ -1,5 +1,6 @@
 import pygame.font
 import shelve
+import os
 
 black = (0, 0, 0)
 white_smoke = (245,245,245)
@@ -11,7 +12,8 @@ purple = (155,48,255)
 yellow = (255,165,0)
 red = (240, 8, 8)
 
-font_path = "Python_work/alien_invasion/robot-9000-font/Robot9000.ttf"
+font_path = os.path.dirname(os.path.abspath(__file__))
+retro_font = os.path.join(font_path, 'fonts', 'Robot9000.ttf')
 
 class Scoreboard:
 	"""A class to report scoring info"""
@@ -28,10 +30,10 @@ class Scoreboard:
 		self.hs_text_colour = deep_pink
 		self.level_text_colour = dark_cyan
 		self.lives_text_colour = red
-		self.font_score = pygame.font.Font(font_path, 24)
-		self.font_h_score = pygame.font.Font(font_path, 24)
-		self.font_level = pygame.font.Font(font_path, 24)
-		self.font_lives = pygame.font.Font(font_path, 24)
+		self.font_score = pygame.font.Font(retro_font, 24)
+		self.font_h_score = pygame.font.Font(retro_font, 24)
+		self.font_level = pygame.font.Font(retro_font, 24)
+		self.font_lives = pygame.font.Font(retro_font, 24)
 
 		# Prepare the inital score image
 		self.prep_score()

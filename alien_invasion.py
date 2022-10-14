@@ -39,7 +39,9 @@ class AlienInvasion:
 	def __init__(self):
 		"""Initilize the game and resources"""
 		pygame.init()
+		pygame.mixer.init()
 		self.settings = Settings()
+		
 
 		# self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
 		# self.settings.screen_width = self.screen.get_rect().width
@@ -252,6 +254,7 @@ class AlienInvasion:
 	def _fire_bullet(self):
 		"""Create a new bullet and add it to the bullets group"""
 		if len(self.bullets) < self.settings.bullets_allowed:
+			pygame.mixer.Sound.play(self.settings.laser)
 			new_bullet = Bullet(self)
 			self.bullets.add(new_bullet)
 
@@ -260,7 +263,7 @@ class AlienInvasion:
 		if len(self.stars) < 300:
 			new_star = Star(self)
 			self.stars.add(new_star)
-
+ 
 
 	def _check_keyup_events(self, event):
 		"""Responds to key release"""

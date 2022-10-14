@@ -1,6 +1,10 @@
 import pygame
+import os
 
-jet_image = pygame.image.load('Python_work/alien_invasion/images/space.bmp')
+
+image_path = os.path.dirname(os.path.abspath(__file__))
+
+jet_image = pygame.image.load(os.path.join(image_path, 'images', 'space.bmp'))
 jet = pygame.transform.scale(jet_image, (60, 80))
 
 class Ship:

@@ -1,10 +1,15 @@
 import pygame.font
+import os
 
 dark_cyan = (0,139,139)
 light_cyan = (0,238,238)
 deep_pink = (255,20,147)
 purple = (155,48,255)
 dark_pink = (139,10,80)
+
+font_path = os.path.dirname(os.path.abspath(__file__))
+retro_font = os.path.join(font_path, 'fonts', 'Robot9000.ttf')
+
 font_path = "Python_work/alien_invasion/robot-9000-font/Robot9000.ttf"
 test_font = "Python_work/disco-duck-font/Disco.otf"
 
@@ -19,7 +24,7 @@ class Button:
 		self.width, self.height = 400, 100
 		self.button_colour = deep_pink
 		self.text_colour = light_cyan
-		self.font = pygame.font.Font(font_path, 78)
+		self.font = pygame.font.Font(retro_font, 78)
 
 		# Build the button's rect object and center it
 		self.rect = pygame.Rect(0, 0, self.width, self.height)
