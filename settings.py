@@ -9,6 +9,7 @@ deep_pink = (255,20,147)
 dark_pink = (139,10,80)
 purple = (155,48,255)
 yellow = (255,165,0)
+volume = 0.08
 
 
 class Settings:
@@ -44,7 +45,7 @@ class Settings:
 		self.star_speed = 0.5
 
 		# How quickly game speeds up
-		self.speedup_scale = 1.1
+		self.speedup_scale = 1.3
 		# How quickly the alien point value increases
 		self.score_scale = 1.5
 
@@ -53,7 +54,8 @@ class Settings:
 		# Sounds
 		s = os.path.dirname(os.path.abspath(__file__))
 		self.laser = pygame.mixer.Sound(os.path.join(s, 'sound', "laser.ogg"))
-		# self.music = pygame.mixer.music.load(os.path.join(s, 'synthpop.ogg'))
+		self.laser.set_volume(volume)
+		self.music = pygame.mixer.music.load(os.path.join(s, 'sound', 'synthpop.ogg'))
 
 
 	def initialize_dynamic_settings(self):
