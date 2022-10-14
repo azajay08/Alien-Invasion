@@ -4,6 +4,8 @@ dark_cyan = (0,139,139)
 light_cyan = (0,238,238)
 deep_pink = (255,20,147)
 purple = (155,48,255)
+dark_pink = (139,10,80)
+font_path = "Python_work/alien_invasion/robot-9000-font/Robot9000Italic-YzxE8.ttf"
 
 class Button:
 
@@ -16,7 +18,7 @@ class Button:
 		self.width, self.height = 400, 100
 		self.button_colour = deep_pink
 		self.text_colour = light_cyan
-		self.font = pygame.font.SysFont(None, 78)
+		self.font = pygame.font.Font(font_path, 78)
 
 		# Build the button's rect object and center it
 		self.rect = pygame.Rect(0, 0, self.width, self.height)

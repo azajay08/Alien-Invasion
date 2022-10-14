@@ -11,6 +11,8 @@ purple = (155,48,255)
 yellow = (255,165,0)
 red = (240, 8, 8)
 
+font_path = "Python_work/alien_invasion/robot-9000-font/Robot9000Italic-YzxE8.ttf"
+
 class Scoreboard:
 	"""A class to report scoring info"""
 
@@ -26,10 +28,10 @@ class Scoreboard:
 		self.hs_text_colour = deep_pink
 		self.level_text_colour = dark_cyan
 		self.lives_text_colour = red
-		self.font_score = pygame.font.SysFont(None, 32)
-		self.font_h_score = pygame.font.SysFont(None, 32)
-		self.font_level = pygame.font.SysFont(None, 32)
-		self.font_lives = pygame.font.SysFont(None, 32)
+		self.font_score = pygame.font.Font(font_path, 24)
+		self.font_h_score = pygame.font.Font(font_path, 24)
+		self.font_level = pygame.font.Font(font_path, 24)
+		self.font_lives = pygame.font.Font(font_path, 24)
 
 		# Prepare the inital score image
 		self.prep_score()
