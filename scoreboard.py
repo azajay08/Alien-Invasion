@@ -9,6 +9,7 @@ deep_pink = (255,20,147)
 dark_pink = (139,10,80)
 purple = (155,48,255)
 yellow = (255,165,0)
+red = (240, 8, 8)
 
 class Scoreboard:
 	"""A class to report scoring info"""
@@ -24,19 +25,22 @@ class Scoreboard:
 		self.text_colour = yellow
 		self.hs_text_colour = deep_pink
 		self.level_text_colour = dark_cyan
+		self.lives_text_colour = red
 		self.font_score = pygame.font.SysFont(None, 32)
 		self.font_h_score = pygame.font.SysFont(None, 32)
 		self.font_level = pygame.font.SysFont(None, 32)
+		self.font_lives = pygame.font.SysFont(None, 32)
 
 		# Prepare the inital score image
 		self.prep_score()
 		self.prep_high_score()
 		self.prep_level()
+		self.prep_lives()
 
 	def prep_score(self):
 		"""Turn score into rendered image"""
 		rounded_score = round(self.stats.score -1)
-		score_str = "{:,}".format(rounded_score)
+		score_str = "Score{:,}".format(rounded_score)
 		self.score_image = self.font_score.render(score_str, True,
 						self.text_colour, self.settings.bg_colour)
 		
@@ -69,11 +73,25 @@ class Scoreboard:
 		self.level_rect.top = self.score_rect.top
 		self.level_rect.centerx = self.screen_rect.centerx
 
+	def prep_lives(self):
+		"""Turn lives into rendered image"""
+		lives = str(self.stats.ships_left)
+		lives_str = "Lives:{:}".format(lives)
+		self.lives_image = self.font_lives.render(lives_str, True,
+						self.lives_text_colour, self.settings.bg_colour)
+
+		# Position the lives below the score
+
+		self.lives_rect = self.lives_image.get_rect()
+		self.lives_rect.right = self.score_rect.right
+		self.lives_rect.top = self.score_rect.bottom + 10
+
 	def show_score(self):
 		"""Draw score and level to the screen."""
 		self.screen.blit(self.score_image, self.score_rect)
 		self.screen.blit(self.high_score_image, self.high_score_rect)
 		self.screen.blit(self.level_image, self.level_rect)
+		self.screen.blit(self.lives_image, self.lives_rect)
 
 	def check_high_score(self):
 		"""Check to see if there is a new high score"""
