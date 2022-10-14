@@ -1,4 +1,5 @@
 import pygame.font
+import shelve
 
 black = (0, 0, 0)
 white_smoke = (245,245,245)
@@ -76,6 +77,13 @@ class Scoreboard:
 
 	def check_high_score(self):
 		"""Check to see if there is a new high score"""
+
+
+
 		if self.stats.score > self.stats.high_score:
 			self.stats.high_score = self.stats.score
+			hs = shelve.open('score.txt')
+			hs['score'] = self.stats.high_score
+			hs.close()
 			self.prep_high_score()
+		

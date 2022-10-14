@@ -1,4 +1,5 @@
 import pygame
+import shelve
 
 class GameStats:
 	"""Track the stats of the game"""
@@ -11,7 +12,10 @@ class GameStats:
 		self.reset_stats()
 
 		# High score should never be reset
-		self.high_score = 0
+
+		hs = shelve.open('score.txt')
+		self.high_score = hs['score']
+		hs.close()
 
 		
 
