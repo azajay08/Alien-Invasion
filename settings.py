@@ -51,7 +51,7 @@ class Settings:
 
 		self.initialize_dynamic_settings()
 
-		# Sounds
+		# Initialize the sound and the music
 		s = os.path.dirname(os.path.abspath(__file__))
 		self.laser = pygame.mixer.Sound(os.path.join(s, 'sound', "laser.ogg"))
 		self.laser.set_volume(volume)

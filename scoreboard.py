@@ -61,7 +61,7 @@ class Scoreboard:
 		self.high_score_image = self.font_h_score.render(high_score_str, True,
 							self.hs_text_colour, self.settings.bg_colour)
 		
-		# Center the high score at the top of the screen
+		# Position high score top left
 		self.high_score_rect = self.high_score_image.get_rect()
 		self.high_score_rect.left = self.screen_rect.left + 20
 		self.high_score_rect.top = 20
@@ -72,7 +72,7 @@ class Scoreboard:
 		level_str = "Level:{:}".format(level_v)
 		self.level_image = self.font_level.render(level_str, True,
 						self.level_text_colour, self.settings.bg_colour)
-		# Position the level below the score
+		# Position the level in the center
 		self.level_rect = self.level_image.get_rect()
 		self.level_rect.top = self.score_rect.top
 		self.level_rect.centerx = self.screen_rect.centerx
@@ -104,6 +104,8 @@ class Scoreboard:
 
 		if self.stats.score > self.stats.high_score:
 			self.stats.high_score = self.stats.score
+			# If the high score is broken, it will be saved into the
+			# score.txt file
 			hs = shelve.open('score.txt')
 			hs['score'] = self.stats.high_score
 			hs.close()

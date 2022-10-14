@@ -13,6 +13,7 @@ class GameStats:
 
 		# High score should never be reset
 
+		# This will get the high score from the score.txt file
 		hs = shelve.open('score.txt')
 		self.high_score = hs['score']
 		hs.close()

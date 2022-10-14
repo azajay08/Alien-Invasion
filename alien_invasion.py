@@ -216,6 +216,7 @@ class AlienInvasion:
 	def _check_play_button(self, mouse_pos):
 		"""Start a new game when the player clock Play."""
 		button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+		# Starts the music when the play button is pressed
 		pygame.mixer.music.play(-1)
 		if button_clicked and not self.stats.game_active:
 			# Reset the game settings
@@ -255,6 +256,7 @@ class AlienInvasion:
 	def _fire_bullet(self):
 		"""Create a new bullet and add it to the bullets group"""
 		if len(self.bullets) < self.settings.bullets_allowed:
+			# Plays pew pew sound everytime a bullet is fired
 			pygame.mixer.Sound.play(self.settings.laser)
 			new_bullet = Bullet(self)
 			self.bullets.add(new_bullet)
