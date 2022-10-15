@@ -93,6 +93,7 @@ class AlienInvasion:
 		# Decrement ships_left
 		if self.stats.ships_left > 0:
 			self.stats.ships_left -= 1
+			self.sb.prep_lives()
 
 			# Get rid of any remaining aliens and bullets
 			self.aliens.empty()
