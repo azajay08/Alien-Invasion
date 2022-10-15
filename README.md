@@ -8,4 +8,4 @@ Alien Invasion is a project from the Python Crash Course book. It is my first py
 
 ## Running the game
 
-Right now it requires pygame and python to run it. Im working on making it more accessible. If you have python and pygame then just run the `alien_invasion.py` file to launch the game.
+Right now it requires pygame and python to run it. Im working on making it more accessible. If you clone the repository and have python and pygame installed, then just run the `alien_invasion.py` file to launch the game.
