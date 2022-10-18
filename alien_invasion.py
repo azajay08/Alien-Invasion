@@ -1,6 +1,7 @@
-from random import randint
 import sys
 import pygame
+import time
+from random import randint
 from settings import Settings
 from ship import Ship
 from bullets import Bullet
@@ -31,6 +32,8 @@ deep_pink = (255,20,147)
 dark_pink = (139,10,80)
 purple = (155,48,255)
 yellow = (255,165,0)
+fps = 120
+clock = pygame.time.Clock()
 
 
 class AlienInvasion:
@@ -74,7 +77,7 @@ class AlienInvasion:
 				self.ship.update()
 				self._update_bullets()
 				self._update_aliens()
-
+			clock.tick(fps)
 			self._update_screen()
 			
 
