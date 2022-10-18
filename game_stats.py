@@ -1,5 +1,9 @@
 import pygame
 import shelve
+import os
+
+dir_path = os.path.dirname(os.path.abspath(__file__))
+score_file = os.path.join(dir_path, 'score.txt')
 
 class GameStats:
 	"""Track the stats of the game"""
@@ -13,8 +17,9 @@ class GameStats:
 
 		# High score should never be reset
 
+		# self.high_score = 0
 		# This will get the high score from the score.txt file
-		hs = shelve.open('score.txt')
+		hs = shelve.open(score_file)
 		self.high_score = hs['score']
 		hs.close()
 

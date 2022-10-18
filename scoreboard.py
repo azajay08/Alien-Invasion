@@ -12,8 +12,9 @@ purple = (155,48,255)
 yellow = (255,165,0)
 red = (240, 8, 8)
 
-font_path = os.path.dirname(os.path.abspath(__file__))
-retro_font = os.path.join(font_path, 'fonts', 'Robot9000.ttf')
+dir_path = os.path.dirname(os.path.abspath(__file__))
+retro_font = os.path.join(dir_path, 'fonts', 'Robot9000.ttf')
+score_file = os.path.join(dir_path, 'score.txt')
 
 class Scoreboard:
 	"""A class to report scoring info"""
@@ -99,14 +100,11 @@ class Scoreboard:
 
 	def check_high_score(self):
 		"""Check to see if there is a new high score"""
-
-
-
 		if self.stats.score > self.stats.high_score:
 			self.stats.high_score = self.stats.score
 			# If the high score is broken, it will be saved into the
 			# score.txt file
-			hs = shelve.open('score.txt')
+			hs = shelve.open(score_file)
 			hs['score'] = self.stats.high_score
 			hs.close()
 			self.prep_high_score()
