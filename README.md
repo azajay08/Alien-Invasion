@@ -1,6 +1,6 @@
 # Alien-Invasion 👾
 
-![AZ - ALIEN INVASION](https://user-images.githubusercontent.com/86073849/195985730-b034c03e-ac4c-4e82-9d27-c2a7c99e39e4.gif)
+![ezgif com-gif-maker-2](https://user-images.githubusercontent.com/86073849/196988436-c6516064-bd08-47d5-a44d-0a538a7adffb.gif)
 
 ## What is Alien Invasion?
 
