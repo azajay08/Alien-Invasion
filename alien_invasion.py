@@ -12,18 +12,6 @@ from game_stats import GameStats
 from button import Button
 from scoreboard import Scoreboard
 
-# make the squares eventually pink and light pink, cyan and light cyan
-# black background, white and yellow text
-
-# black (0, 0, 0) - #000000
-# white smoke (245,245,245) - #F5F5F5
-# dark cyan (0,139,139) - #008B8B
-# light cyan (0,238,238) - #00EEEE
-# deep pink (255,20,147) - #FF1493
-# dark pink (139,10,80) - #8B0A50
-# purple (155,48,255) - #9B30FF
-# dark yellow (255,165,0) - #FFA500
-
 black = (0, 0, 0)
 white_smoke = (245,245,245)
 light_cyan = (0,238,238)
@@ -44,19 +32,13 @@ class AlienInvasion:
 		pygame.init()
 		pygame.mixer.init()
 		self.settings = Settings()
-		
-
-		# self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
-		# self.settings.screen_width = self.screen.get_rect().width
-		# self.settings.screen_height = self.screen.get_rect().height
-
 		self.screen = pygame.display.set_mode((
 			self.settings.screen_width, self.settings.screen_height))
 		pygame.display.set_caption("Alien Invasion!")
 
 		# Create an instance to store game stats
-		# Create scoreboard
 		self.stats = GameStats(self)
+		# Create scoreboard
 		self.sb = Scoreboard(self)
 
 		self.stars = pygame.sprite.Group()
@@ -172,7 +154,6 @@ class AlienInvasion:
 			if bullet.rect.bottom <= 0:
 				self.bullets.remove(bullet)
 		self._check_bullet_alien_collision()
-#print(len(self.bullets))
 
 	def _check_bullet_alien_collision(self):
 		"""Respond to bullet-alien collisions"""
@@ -252,10 +233,6 @@ class AlienInvasion:
 			self.ship.moving_right = True
 		elif event.key == pygame.K_a:
 			self.ship.moving_left = True
-		# elif event.key == pygame.K_UP:
-		# 	self.ship.moving_up = True
-		# elif event.key == pygame.K_DOWN:
-		# 	self.ship.moving_down = True
 		elif event.key == pygame.K_q:
 			sys.exit()
 		elif event.key == pygame.K_SPACE:
@@ -274,7 +251,6 @@ class AlienInvasion:
 		if len(self.stars) < 300:
 			new_star = Star(self)
 			self.stars.add(new_star)
- 
 
 	def _check_keyup_events(self, event):
 		"""Responds to key release"""
@@ -286,11 +262,6 @@ class AlienInvasion:
 			self.ship.moving_right = False
 		elif event.key == pygame.K_a:
 			self.ship.moving_left = False
-		# elif event.key == pygame.K_UP:
-		# 	self.ship.moving_up = False
-		# elif event.key == pygame.K_DOWN:
-		# 	self.ship.moving_down = False
-
 
 	def _update_screen(self):
 		"""Update images on screen, flip to the new screen."""
