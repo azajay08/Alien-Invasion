@@ -198,6 +198,8 @@ class AlienInvasion:
 					if event.key == pygame.K_SPACE:
 						mouse_pos = pygame.mouse.get_pos()
 						self._check_play_button_space()
+					elif event.key == pygame.K_q:
+						sys.exit()
 			elif event.type == pygame.KEYDOWN:
 				self._check_keydown_events(event)
 			elif event.type == pygame.KEYUP:
