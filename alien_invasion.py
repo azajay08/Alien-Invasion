@@ -190,16 +190,45 @@ class AlienInvasion:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				sys.exit()
-			elif event.type == pygame.MOUSEBUTTONDOWN:
-				mouse_pos = pygame.mouse.get_pos()
-				self._check_play_button(mouse_pos)
+			if self.stats.game_active == False:
+				if event.type == pygame.MOUSEBUTTONDOWN:
+					mouse_pos = pygame.mouse.get_pos()
+					self._check_play_button(mouse_pos)
+				elif event.type == pygame.KEYDOWN:
+					if event.key == pygame.K_SPACE:
+						mouse_pos = pygame.mouse.get_pos()
+						self._check_play_button_space()
 			elif event.type == pygame.KEYDOWN:
 				self._check_keydown_events(event)
 			elif event.type == pygame.KEYUP:
 				self._check_keyup_events(event)
 
+	def _check_play_button_space(self):
+		"""Start a new game when the player hits space on the start screen."""
+		# Starts the music when the play button is pressed
+		pygame.mixer.music.play(-1)
+		if not self.stats.game_active:
+			# Reset the game settings
+			self.settings.initialize_dynamic_settings()
+			self.stats.reset_stats()
+			self.stats.game_active = True
+			self.sb.prep_score()
+			self.sb.prep_level()
+			self.sb.prep_lives()
+
+			# Hide the cursor
+
+			# Get rif of any remaining aliens and bullets
+			self.aliens.empty()
+			self.bullets.empty()
+
+			# Create new fleet and center ship
+			self._create_fleet()
+			self.ship.center_ship()
+
+
 	def _check_play_button(self, mouse_pos):
-		"""Start a new game when the player clock Play."""
+		"""Start a new game when the player click Play."""
 		button_clicked = self.play_button.rect.collidepoint(mouse_pos)
 		# Starts the music when the play button is pressed
 		pygame.mixer.music.play(-1)
