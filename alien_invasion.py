@@ -156,6 +156,15 @@ class AlienInvasion:
 		elif event.key == pygame.K_a:
 			self.ship.moving_left = False
 
+	def _update_stars(self):
+		"""Update star pos"""
+		self._star_launch()
+		self.stars.update()
+			# Get rid of stars
+		for star in self.stars.copy():
+			if star.rect.bottom <= 0:
+				self.stars.remove(star)
+
 	def _update_screen(self):
 		"""Update images on screen, flip to the new screen."""
 		self.screen.fill(self.settings.bg_colour)
@@ -284,16 +293,6 @@ class AlienInvasion:
 			# Increase level
 			self.stats.level += 1
 			self.sb.prep_level()
-
-	def _update_stars(self):
-		"""Update star pos"""
-		self._star_launch()
-		self.stars.update()
-			# Get rid of stars
-		for star in self.stars.copy():
-			if star.rect.bottom <= 0:
-				self.stars.remove(star)
-			
 
 	def _fire_bullet(self):
 		"""Create a new bullet and add it to the bullets group"""
