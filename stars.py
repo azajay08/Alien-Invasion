@@ -15,15 +15,13 @@ class Star(Sprite):
 		self.screen_width = self.settings.screen_width
 
 		# Using randint, it will create the stars at different x coords of the screen
-		self.rect = pygame.Rect((randint(0 , self.screen_width)), (randint(0 , self.screen_height)), self.settings.star_width,
-			self.settings.star_height)
-
+		self.rect = pygame.Rect((randint(0 , self.screen_width)), (randint(0 , self.screen_height)),
+			self.settings.star_width, self.settings.star_height)
 		self.y = float(self.rect.y)
 
 	def update(self):
 		"""Moves stars in downwards direction"""
 		self.y += self.settings.star_speed
-
 		self.rect.y = self.y
 		if self.y >= self.settings.screen_height:
 			self.y = 0
