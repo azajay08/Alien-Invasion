@@ -24,7 +24,7 @@ class Settings:
 
 		# ship settings
 		
-		self.ship_limit = 3
+		self.ship_limit = 0
 
 		# Bullet settings
 		self.bullet_width = 5
@@ -52,10 +52,10 @@ class Settings:
 		self.initialize_dynamic_settings()
 
 		# Initialize the sound and the music
-		s = os.path.dirname(os.path.abspath(__file__))
-		self.laser = pygame.mixer.Sound(os.path.join(s, 'sound', "laser.ogg"))
+		sound_dir = os.path.dirname(os.path.abspath(__file__))
+		self.laser = pygame.mixer.Sound(os.path.join(sound_dir, 'sound', "laser.ogg"))
 		self.laser.set_volume(volume)
-		self.music = pygame.mixer.music.load(os.path.join(s, 'sound', 'synthpop.ogg'))
+		self.music = pygame.mixer.music.load(os.path.join(sound_dir, 'sound', 'synthpop.ogg'))
 
 
 	def initialize_dynamic_settings(self):

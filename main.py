@@ -11,6 +11,7 @@ from time import sleep
 from game_stats import GameStats
 from button import Button
 from scoreboard import Scoreboard
+from instructions import Instructions
 
 black = (0, 0, 0)
 white_smoke = (245,245,245)
@@ -49,6 +50,7 @@ class AlienInvasion:
 		self._create_fleet()
 		# Make play button
 		self.play_button = Button(self, "Play")
+		self.instructions = Instructions(self)
 
 	def run_game(self):
 		"""Start the main loop for the game"""
@@ -139,23 +141,6 @@ class AlienInvasion:
 		for star in self.stars.copy():
 			if star.rect.bottom <= 0:
 				self.stars.remove(star)
-
-	def _update_screen(self):
-		"""Update images on screen, flip to the new screen."""
-		self.screen.fill(self.settings.bg_colour)
-		for star in self.stars.sprites():
-			star.draw_star()
-		self.ship.blitme()
-		for bullet in self.bullets.sprites():
-			bullet.draw_bullet()
-		self.aliens.draw(self.screen)
-		# Draw the score info
-		self.sb.show_score()
-		# Draw the play button if the game is inactive
-		if not self.stats.game_active:
-			self.play_button.draw_button()
-
-		pygame.display.flip()
 
 	def _check_aliens_bottom(self):
 		"""Cheack if aliens have reached the bottom"""
@@ -282,6 +267,24 @@ class AlienInvasion:
 		if len(self.stars) < 300:
 			new_star = Star(self)
 			self.stars.add(new_star)
+
+	def _update_screen(self):
+		"""Update images on screen, flip to the new screen."""
+		self.screen.fill(self.settings.bg_colour)
+		for star in self.stars.sprites():
+			star.draw_star()
+		self.ship.blitme()
+		for bullet in self.bullets.sprites():
+			bullet.draw_bullet()
+		self.aliens.draw(self.screen)
+		# Draw the score info
+		self.sb.show_score()
+		# Draw the play button if the game is inactive
+		if not self.stats.game_active:
+			self.play_button.draw_button()
+			self.instructions.draw_instructions()
+
+		pygame.display.flip()
 
 if __name__ == '__main__':
 	ai = AlienInvasion()
