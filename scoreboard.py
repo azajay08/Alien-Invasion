@@ -44,7 +44,7 @@ class Scoreboard:
 
 	def prep_score(self):
 		"""Turn score into rendered image"""
-		rounded_score = round(self.stats.score -1)
+		rounded_score = round(self.stats.score, 0)
 		score_str = "Score:{:,}".format(rounded_score)
 		self.score_image = self.font_score.render(score_str, True,
 						self.text_colour, self.settings.bg_colour)
