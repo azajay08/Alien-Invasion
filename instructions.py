@@ -17,7 +17,7 @@ retro_font = os.path.join(font_path, 'fonts', 'Robot9000.ttf')
 class Instructions:
 
 	def __init__(self, ai_game):
-		"""Init button attributes"""
+		"""Init instructions attributes"""
 		self.screen = ai_game.screen
 		self.screen_rect = self.screen.get_rect()
 
@@ -39,7 +39,7 @@ class Instructions:
 		self._prep_msg()
 
 	def _prep_msg(self):
-		"""Turn msg into rendered image and center text on the button"""
+		"""Turn instructions strings into rendered images"""
 		message1 = "Press 'SPACE' or click 'PLAY' to start"
 		message2 = "Use arrow keys or 'a' and 'd' to move, 'SPACE' to shoot"
 		self.msg_image1 = self.font.render(message1, True, self.text1_colour, black)
@@ -50,7 +50,7 @@ class Instructions:
 		self.msg_image_rect2.center = self.rect2.center
 
 	def draw_instructions(self):
-		"""Draw blank button and then draw message"""
+		"""Draws the image of the instruction strings"""
 		# self.screen.fill(None, self.rect)
 		self.screen.blit(self.msg_image1, self.msg_image_rect1)
 		self.screen.blit(self.msg_image2, self.msg_image_rect2)
