@@ -3,12 +3,8 @@ import os
 
 black = (0, 0, 0)
 white = (245,245,245)
-light_cyan = (0,238,238)
 dark_cyan = (0,139,139)
 deep_pink = (255,20,147)
-dark_pink = (139,10,80)
-purple = (155,48,255)
-yellow = (255,165,0)
 volume = 0.08
 
 class Settings:
@@ -22,7 +18,6 @@ class Settings:
 		self.bg_colour = black
 
 		# ship settings
-		
 		self.ship_limit = 3
 
 		# Bullet settings
@@ -34,7 +29,6 @@ class Settings:
 		# Alien settings
 		self.fleet_drop_speed = 10
 		
-
 		# stars
 		self.star_colour = white
 		self.star_width = 2
@@ -48,6 +42,7 @@ class Settings:
 		# How quickly the alien point value increases
 		self.score_scale = 1.5
 
+		# Initialize the dynamic settings
 		self.initialize_dynamic_settings()
 
 		# Initialize the sound and the music
