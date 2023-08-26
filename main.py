@@ -12,18 +12,10 @@ from game_stats import GameStats
 from button import Button
 from scoreboard import Scoreboard
 from instructions import Instructions
+from game_over import GameOver
 
-black = (0, 0, 0)
-white_smoke = (245,245,245)
-light_cyan = (0,238,238)
-dark_cyan = (0,139,139)
-deep_pink = (255,20,147)
-dark_pink = (139,10,80)
-purple = (155,48,255)
-yellow = (255,165,0)
 fps = 120
 clock = pygame.time.Clock()
-
 
 class AlienInvasion:
 	"""Overall class to manage game assets and behaviour"""
@@ -51,6 +43,7 @@ class AlienInvasion:
 		# Make play button
 		self.play_button = Button(self, "Play")
 		self.instructions = Instructions(self)
+		self.game_over = GameOver(self)
 
 	def run_game(self):
 		"""Start the main loop for the game"""
@@ -58,6 +51,7 @@ class AlienInvasion:
 			self._check_events()
 			self._update_stars()
 			if self.stats.game_active == True:
+				self.stats.game_run = True
 				self.ship.update()
 				self._update_bullets()
 				self._update_aliens()
@@ -70,14 +64,20 @@ class AlienInvasion:
 			if event.type == pygame.QUIT:
 				sys.exit()
 			if self.stats.game_active == False:
-				self._check_play_button(event)
+				self._check_inactive_events(event)
 			elif event.type == pygame.KEYDOWN:
 				self._check_keydown_events(event)
 			elif event.type == pygame.KEYUP:
 				self._check_keyup_events(event)
 
-	def _check_play_button(self, event):
-		if event.type == pygame.MOUSEBUTTONDOWN:
+	def _check_inactive_events(self, event):
+		if self.stats.game_run == True:
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_RETURN:
+					self.stats.game_run = False
+				elif event.key == pygame.K_q:
+					sys.exit()
+		elif event.type == pygame.MOUSEBUTTONDOWN:
 			mouse_pos = pygame.mouse.get_pos()
 			if self.play_button.rect.collidepoint(mouse_pos):
 				self._start_game()
@@ -154,7 +154,7 @@ class AlienInvasion:
 	def _ship_hit(self):
 		"""Respond to ship being hit"""
 		# Decrement ships_left
-		if self.stats.ships_left > 0:
+		if self.stats.ships_left > 1:
 			self.stats.ships_left -= 1
 			self.sb.prep_lives()
 
@@ -168,6 +168,8 @@ class AlienInvasion:
 			# Pause.
 			sleep(0.5)
 		else:
+			self.stats.ships_left = 0
+			self.sb.prep_lives()
 			self.stats.game_active = False
 			pygame.mouse.set_visible(True)
 
@@ -281,8 +283,11 @@ class AlienInvasion:
 		self.sb.show_score()
 		# Draw the play button if the game is inactive
 		if not self.stats.game_active:
-			self.play_button.draw_button()
-			self.instructions.draw_instructions()
+			if self.stats.game_run == True:
+				self.game_over.draw_instructions()
+			else:
+				self.play_button.draw_button()
+				self.instructions.draw_instructions()
 
 		pygame.display.flip()
 

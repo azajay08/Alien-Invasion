@@ -40,8 +40,8 @@ class Instructions:
 
 	def _prep_msg(self):
 		"""Turn msg into rendered image and center text on the button"""
-		message1 = "Press 'SPACE' to play or click 'PLAY'"
-		message2 = "Use arrow keys to move left and right, 'SPACE' to shoot."
+		message1 = "Press 'SPACE' or click 'PLAY' to start"
+		message2 = "Use arrow keys or 'a' and 'd' to move, 'SPACE' to shoot"
 		self.msg_image1 = self.font.render(message1, True, self.text1_colour, black)
 		self.msg_image_rect1 = self.msg_image1.get_rect()
 		self.msg_image_rect1.center = self.rect1.center

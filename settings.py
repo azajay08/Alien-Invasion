@@ -11,7 +11,6 @@ purple = (155,48,255)
 yellow = (255,165,0)
 volume = 0.08
 
-
 class Settings:
 	"""A class to store all the settings for Alien Invasion"""
 
@@ -24,7 +23,7 @@ class Settings:
 
 		# ship settings
 		
-		self.ship_limit = 0
+		self.ship_limit = 3
 
 		# Bullet settings
 		self.bullet_width = 5
