@@ -1,7 +1,6 @@
 import sys
 import pygame
 import time
-from random import randint
 from settings import Settings
 from ship import Ship
 from bullets import Bullet
@@ -14,6 +13,7 @@ from scoreboard import Scoreboard
 from instructions import Instructions
 from game_over import GameOver
 
+yellow = (255,165,0)
 fps = 120
 clock = pygame.time.Clock()
 
@@ -225,6 +225,9 @@ class AlienInvasion:
 
 	def _update_bullets(self):
 		"""Update bullet pos"""
+		if self.stats.score > 1000:
+			self.settings.bullet_width = 60
+			self.settings.bullet_colour = yellow
 		self.bullets.update()
 			# Get rid of bullets
 		for bullet in self.bullets.copy():

@@ -5,6 +5,7 @@ black = (0, 0, 0)
 white = (245,245,245)
 dark_cyan = (0,139,139)
 deep_pink = (255,20,147)
+yellow = (255,165,0)
 volume = 0.08
 
 class Settings:
@@ -25,6 +26,7 @@ class Settings:
 		self.bullet_height = 15
 		self.bullet_colour = deep_pink
 		self.bullets_allowed = 10
+		self.bullet_power = False
 
 		# Alien settings
 		self.fleet_drop_speed = 10
