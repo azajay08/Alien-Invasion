@@ -41,6 +41,7 @@ class Settings:
 
 		# Power ups
 		self.p_bullet = False
+		self.test = False
 		self.p_bullet_colour = orange
 		self.p_bullet_count = 50
 

@@ -224,10 +224,20 @@ class AlienInvasion:
 
 	def _update_bullets(self):
 		"""Update bullet pos"""
-		if self.stats.score > 1000:
+		# Work in progress, timing the power up testing
+		if self.stats.score > 1000 and self.settings.test == False: 
 			# self.settings.bullet_colour = self.settings.p_bullet_colour
-			self.settings.bullet_count = self.settings.p_bullet_count
+			# self.settings.bullet_count = self.settings.p_bullet_count
+
 			self.settings.p_bullet = True
+			self.settings.test = True
+			self.power_timer = pygame.time.get_ticks()
+		if self.settings.p_bullet:
+			self.current_time = pygame.time.get_ticks()
+			self.settings.bullet_count = self.settings.p_bullet_count
+			if self.current_time - self.power_timer > 5000: 
+				self.settings.p_bullet = False
+
 		self.bullets.update()
 			# Get rid of bullets
 		for bullet in self.bullets.copy():
