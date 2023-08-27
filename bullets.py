@@ -6,7 +6,7 @@ yellow = (255,165,0)
 class Bullet(Sprite):
 	"""A class to manage bullets fired from ship"""
 
-	def __init__(self, ai_game):
+	def __init__(self, ai_game, type):
 		"""Creat a bullet object at the ship's current pos"""
 		super().__init__()
 		self.ai = ai_game;
@@ -14,32 +14,31 @@ class Bullet(Sprite):
 		self.settings = ai_game.settings
 		self.colour = self.settings.bullet_colour
 		self.power_colour = yellow
+		self.ship_rect = ai_game.ship.rect
 
 		# Create a bullet rect at (0, 0) and then set current pos
 		self.rect = pygame.Rect(0, 0, self.settings.bullet_width,
 			self.settings.bullet_height)
-		self.rect.midtop = ai_game.ship.rect.midtop
-		# self.rect1 = pygame.Rect(0, 0, 15,
-		# 	self.settings.bullet_height)
-		# self.rect1.midtop = ai_game.ship.rect.midtop
-
-		# Store bullet pos as dec
-		self.y = float(self.rect.y)
-
-		self.power = False
-
-	def update_power_bullet(self):
-		self.rect = pygame.Rect(0, 0, self.settings.bullet_width,
-			self.settings.bullet_height)
-		self.rect.midtop = self.ai.ship.rect.midtop
+		if type == 0:
+			self.rect.midtop = ai_game.ship.rect.midtop
+			self.y = float(self.rect.y)
+			self.colour = self.settings.bullet_colour
+		elif type == 1:
+			self.rect.midtop = ai_game.ship.rect.bottomleft
+			self.y = float(self.rect.y) - 30
+			self.colour = self.settings.p_bullet_colour
+		elif type == 2:
+			self.rect.midtop = ai_game.ship.rect.bottomright
+			self.y = float(self.rect.y) - 30
+			self.colour = self.settings.p_bullet_colour
 
 	def update(self):
 		"""Move the bullet up"""
 		# update dec position of bullet
 		self.y -= self.settings.bullet_speed
-		# update rect position
 		self.rect.y = self.y
 
 	def draw_bullet(self):
 		"""Draw bullet to screen"""
 		pygame.draw.rect(self.screen, self.colour, self.rect)
+		

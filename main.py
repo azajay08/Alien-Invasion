@@ -13,7 +13,6 @@ from scoreboard import Scoreboard
 from instructions import Instructions
 from game_over import GameOver
 
-yellow = (255,165,0)
 fps = 120
 clock = pygame.time.Clock()
 
@@ -226,8 +225,9 @@ class AlienInvasion:
 	def _update_bullets(self):
 		"""Update bullet pos"""
 		if self.stats.score > 1000:
-			self.settings.bullet_width = 60
-			self.settings.bullet_colour = yellow
+			# self.settings.bullet_colour = self.settings.p_bullet_colour
+			self.settings.bullet_count = self.settings.p_bullet_count
+			self.settings.p_bullet = True
 		self.bullets.update()
 			# Get rid of bullets
 		for bullet in self.bullets.copy():
@@ -258,11 +258,16 @@ class AlienInvasion:
 
 	def _fire_bullet(self):
 		"""Create a new bullet and add it to the bullets group"""
-		if len(self.bullets) < self.settings.bullets_allowed:
+		if len(self.bullets) < self.settings.bullet_count:
 			# Plays pew pew sound everytime a bullet is fired
 			pygame.mixer.Sound.play(self.settings.laser)
-			new_bullet = Bullet(self)
+			new_bullet = Bullet(self, 0)
 			self.bullets.add(new_bullet)
+			if self.settings.p_bullet == True:
+				new_bullet = Bullet(self, 1)
+				self.bullets.add(new_bullet)
+				new_bullet = Bullet(self, 2)
+				self.bullets.add(new_bullet)
 
 	def _star_launch(self):
 		"""Create a new star and add it to the star group"""

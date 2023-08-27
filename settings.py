@@ -6,6 +6,7 @@ white = (245,245,245)
 dark_cyan = (0,139,139)
 deep_pink = (255,20,147)
 yellow = (255,165,0)
+orange = (255, 128, 0)
 volume = 0.08
 
 class Settings:
@@ -25,8 +26,7 @@ class Settings:
 		self.bullet_width = 5
 		self.bullet_height = 15
 		self.bullet_colour = deep_pink
-		self.bullets_allowed = 10
-		self.bullet_power = False
+		self.bullet_count = 10
 
 		# Alien settings
 		self.fleet_drop_speed = 10
@@ -38,6 +38,12 @@ class Settings:
 		self.star_x = 1
 		self.star_y = 1
 		self.star_speed = 0.5
+
+		# Power ups
+		self.p_bullet = False
+		self.p_bullet_colour = orange
+		self.p_bullet_count = 50
+
 
 		# How quickly game speeds up
 		self.speedup_scale = 1.3
