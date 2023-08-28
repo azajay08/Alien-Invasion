@@ -15,19 +15,20 @@ class Bullet(Sprite):
 		self.colour = self.settings.bullet_colour
 		self.power_colour = yellow
 		self.ship_rect = ai_game.ship.rect
+		self.fired = False
 
 		# Create a bullet rect at (0, 0) and then set current pos
 		self.rect = pygame.Rect(0, 0, self.settings.bullet_width,
 			self.settings.bullet_height)
-		if type == 0:
+		if type == self.settings.main_gun:
 			self.rect.midtop = ai_game.ship.rect.midtop
 			self.y = float(self.rect.y)
 			self.colour = self.settings.bullet_colour
-		elif type == 1:
+		elif type == self.settings.left_gun:
 			self.rect.midtop = ai_game.ship.rect.bottomleft
 			self.y = float(self.rect.y) - 30
 			self.colour = self.settings.p_bullet_colour
-		elif type == 2:
+		elif type == self.settings.right_gun:
 			self.rect.midtop = ai_game.ship.rect.bottomright
 			self.y = float(self.rect.y) - 30
 			self.colour = self.settings.p_bullet_colour
@@ -41,4 +42,3 @@ class Bullet(Sprite):
 	def draw_bullet(self):
 		"""Draw bullet to screen"""
 		pygame.draw.rect(self.screen, self.colour, self.rect)
-		

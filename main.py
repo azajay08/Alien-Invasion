@@ -35,7 +35,6 @@ class AlienInvasion:
 		self.bullets = pygame.sprite.Group()
 		self.aliens = pygame.sprite.Group()
 		
-		# self._create_fleet()
 		self.play_button = Button(self, "Play")
 		self.instructions = Instructions(self)
 		self.game_over = GameOver(self)
@@ -93,6 +92,14 @@ class AlienInvasion:
 			self.ship.moving_right = True
 		elif event.key == pygame.K_a:
 			self.ship.moving_left = True
+		elif event.key == pygame.K_UP:
+			self.ship.moving_up = True
+		elif event.key == pygame.K_DOWN:
+			self.ship.moving_down = True
+		elif event.key == pygame.K_w:
+			self.ship.moving_up = True
+		elif event.key == pygame.K_s:
+			self.ship.moving_down = True
 		elif event.key == pygame.K_q:
 			sys.exit()
 		elif event.key == pygame.K_SPACE:
@@ -108,6 +115,14 @@ class AlienInvasion:
 			self.ship.moving_right = False
 		elif event.key == pygame.K_a:
 			self.ship.moving_left = False
+		elif event.key == pygame.K_UP:
+			self.ship.moving_up = False
+		elif event.key == pygame.K_DOWN:
+			self.ship.moving_down = False
+		elif event.key == pygame.K_w:
+			self.ship.moving_up = False
+		elif event.key == pygame.K_s:
+			self.ship.moving_down = False
 
 	def _start_game(self):
 		"""Starts the game"""
@@ -136,6 +151,12 @@ class AlienInvasion:
 		for star in self.stars.copy():
 			if star.rect.bottom <= 0:
 				self.stars.remove(star)
+
+	def _star_launch(self):
+		"""Create a new star and add it to the star group"""
+		if len(self.stars) < 300:
+			new_star = Star(self)
+			self.stars.add(new_star)
 
 	def _check_aliens_bottom(self):
 		"""Cheack if aliens have reached the bottom"""
@@ -167,6 +188,7 @@ class AlienInvasion:
 			self.bullets.empty()
 			self.stats.ships_left = 0
 			self.sb.prep_lives()
+			self.ship.center_ship()
 			self.stats.game_active = False
 			pygame.mouse.set_visible(True)
 
@@ -198,15 +220,14 @@ class AlienInvasion:
 		# Creates alien and find number of aliens in row
 		# Spacing between each alien is equal to one alien width
 		alien = Alien(self)
-		alien_width, alien_height = alien.rect.size
-		available_space_x = self.settings.screen_width - (2 * alien_width)
-		number_aliens_x = available_space_x // (2 * alien_width)
+		available_space_x = self.settings.screen_width - (2 * alien.rect.width)
+		number_aliens_x = available_space_x // (2 * alien.rect.width)
 
 		# Determine number of rows
 		ship_height = self.ship.rect.height
 		available_space_y = (self.settings.screen_height -
-								(7 * alien_height) - ship_height)
-		number_rows = available_space_y // (2 * alien_height)
+								(7 * alien.rect.height) - ship_height)
+		number_rows = available_space_y // (2 * alien.rect.height)
 
 		# Create the fleet of aliens
 		for row_number in range(number_rows):
@@ -216,8 +237,7 @@ class AlienInvasion:
 	def _create_alien(self, alien_number, row_number):
 		"""Create an alien and place it in the row"""
 		alien = Alien(self)
-		alien_width, alien_height = alien.rect.size
-		alien.x = alien_width + 2 * alien_width * alien_number
+		alien.x = alien.rect.width + 2 * alien.rect.width * alien_number
 		alien.rect.x = alien.x
 		alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number + 30
 		self.aliens.add(alien)
@@ -225,19 +245,15 @@ class AlienInvasion:
 	def _update_bullets(self):
 		"""Update bullet pos"""
 		# Work in progress, timing the power up testing
-		if self.stats.score > 1000 and self.settings.test == False: 
-			# self.settings.bullet_colour = self.settings.p_bullet_colour
-			# self.settings.bullet_count = self.settings.p_bullet_count
-
-			self.settings.p_bullet = True
-			self.settings.test = True
-			self.power_timer = pygame.time.get_ticks()
-		if self.settings.p_bullet:
-			self.current_time = pygame.time.get_ticks()
-			self.settings.bullet_count = self.settings.p_bullet_count
-			if self.current_time - self.power_timer > 5000: 
-				self.settings.p_bullet = False
-
+		# if self.stats.score > 1000 and self.settings.test == False: 
+		# 	self.settings.p_bullet = True
+		# 	self.settings.test = True
+		# 	self.power_timer = pygame.time.get_ticks()
+		# if self.settings.p_bullet:
+		# 	self.current_time = pygame.time.get_ticks()
+		# 	self.settings.bullet_count = self.settings.p_bullet_count
+		# 	if self.current_time - self.power_timer > 5000: 
+		# 		self.settings.p_bullet = False
 		self.bullets.update()
 			# Get rid of bullets
 		for bullet in self.bullets.copy():
@@ -271,19 +287,13 @@ class AlienInvasion:
 		if len(self.bullets) < self.settings.bullet_count:
 			# Plays pew pew sound everytime a bullet is fired
 			pygame.mixer.Sound.play(self.settings.laser)
-			new_bullet = Bullet(self, 0)
+			new_bullet = Bullet(self, self.settings.main_gun)
 			self.bullets.add(new_bullet)
 			if self.settings.p_bullet == True:
-				new_bullet = Bullet(self, 1)
+				new_bullet = Bullet(self, self.settings.left_gun)
 				self.bullets.add(new_bullet)
-				new_bullet = Bullet(self, 2)
+				new_bullet = Bullet(self, self.settings.right_gun)
 				self.bullets.add(new_bullet)
-
-	def _star_launch(self):
-		"""Create a new star and add it to the star group"""
-		if len(self.stars) < 300:
-			new_star = Star(self)
-			self.stars.add(new_star)
 
 	def _update_screen(self):
 		"""Update images on screen, flip to the new screen."""
