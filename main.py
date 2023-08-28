@@ -1,6 +1,7 @@
 import sys
 import pygame
 import time
+from random import randint
 from settings import Settings
 from ship import Ship
 from bullets import Bullet
@@ -12,6 +13,9 @@ from button import Button
 from scoreboard import Scoreboard
 from instructions import Instructions
 from game_over import GameOver
+from power_ups import PowerUp
+from bullet_power_up import BulletPowerUp
+from life_power_up import LifePowerUp
 
 fps = 120
 clock = pygame.time.Clock()
@@ -38,6 +42,11 @@ class AlienInvasion:
 		self.play_button = Button(self, "Play")
 		self.instructions = Instructions(self)
 		self.game_over = GameOver(self)
+		self.power_up = PowerUp(self)
+		self.power_bullet = BulletPowerUp(self)
+		self.power_life = LifePowerUp(self)
+		self.p_ups = [self.power_up, self.power_bullet, self.power_life]
+		self.p = randint(0, 2)
 
 	def run_game(self):
 		"""Start the main loop for the game"""
@@ -277,7 +286,8 @@ class AlienInvasion:
 			self.bullets.empty()
 			self._create_fleet()
 			self.settings.increase_speed()
-
+			self.p = randint(0, 2)
+			
 			# Increase level
 			self.stats.level += 1
 			self.sb.prep_level()
@@ -306,6 +316,17 @@ class AlienInvasion:
 		self.aliens.draw(self.screen)
 		# Draw the score info
 		self.sb.show_score()
+
+		# self.power_bullet.rect.y += 1
+		# self.power_bullet.prep_power_up()
+		# self.power_bullet.draw_power_up()
+		# self.power_up.rect.y += 1
+		# self.power_up.prep_power_up()
+		# self.power_up.draw_power_up()
+		self.p_ups[self.p].rect.y += 1
+		self.p_ups[self.p].prep_power_up()
+		self.p_ups[self.p].draw_power_up()
+
 		# Draw the play button if the game is inactive
 		if not self.stats.game_active:
 			if self.stats.game_run == True:
