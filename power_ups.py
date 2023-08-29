@@ -25,6 +25,7 @@ class PowerUp(Sprite):
 		# self.rect.midtop = self.screen_rect.midtop
 		self.letter = "P"
 		self.prep_power_up()
+		self.y = float(self.rect.y)
 
 	def prep_power_up(self):
 		self.power_up_image = self.font.render(self.letter, True, self.text_colour,
@@ -37,3 +38,7 @@ class PowerUp(Sprite):
 		# self.screen.fill(self.square_colour, self.rect)
 		pygame.draw.circle(self.screen, self.square_colour, self.rect.center, 15, 15)
 		self.screen.blit(self.power_up_image, self.power_up_rect)
+
+	def update(self):
+		self.y += 1
+		self.rect.y = self.y

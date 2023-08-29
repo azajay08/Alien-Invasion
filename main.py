@@ -40,6 +40,7 @@ class AlienInvasion:
 		self.bullets = pygame.sprite.Group()
 		self.aliens = pygame.sprite.Group()
 		self.meteors = pygame.sprite.Group()
+		self.power = pygame.sprite.Group()
 		
 		self.play_button = Button(self, "Play")
 		self.instructions = Instructions(self)
@@ -59,6 +60,7 @@ class AlienInvasion:
 				self.ship.update()
 				self._update_power_up()
 				self._create_meteors()
+				self._update_power_up()
 				self._update_meteors()
 				self._update_bullets()
 				self._update_aliens()
@@ -66,9 +68,21 @@ class AlienInvasion:
 			self._update_screen()
 
 	def _update_power_up(self):
-		if pygame.sprite.collide_rect(self.ship, self.generator.power_up):
-			self._ship_hit()
-			self.generator.power_up.kill()
+		# if pygame.sprite.collide_rect(self.ship, self.generator.power_up):
+		# 	# self._ship_hit()
+		# 	self.generator.power_up.kill()
+		collisions = pygame.sprite.spritecollide(
+			self.ship, self.power, False)
+		if collisions:
+			for power in collisions:
+				if power.letter == "L":
+					self.stats.lives_left += 1
+					self.sb.prep_lives()
+				self.power.remove(power)
+		for power in self.power:
+			if power.rect.bottom <= 0:
+				self.power.remove(power)
+
 
 	def _check_meteor_collisions(self):
 		ship_collisions = pygame.sprite.spritecollide(
@@ -84,8 +98,9 @@ class AlienInvasion:
 			else:
 				# Sets game inactive
 				self.meteors.empty()
+				self.power.empty()
 				# self.settings.meteor_count = 0
-				self.aliens.empty()
+				# self.aliens.empty()
 				self.bullets.empty()
 				self.stats.lives_left = 0
 				self.sb.prep_lives()
@@ -191,6 +206,7 @@ class AlienInvasion:
 		# Reset the game settings
 		self.settings.initialize_dynamic_settings()
 		self.stats.reset_stats()
+		self.settings.meteor_amount = self.settings.meteor_default
 		self.stats.game_active = True
 		self.sb.prep_score()
 		self.sb.prep_level()
@@ -198,11 +214,15 @@ class AlienInvasion:
 		# Hides the cursor
 		pygame.mouse.set_visible(False)
 		# Get rid of any remaining aliens and bullets
+		self.meteors.empty()
 		self.aliens.empty()
 		self.bullets.empty()
 		# Create new fleet and centers ship
 		self._create_fleet()
 		self.ship.center_ship()
+		self.generator.generate_power_up()
+		self.power.add(self.generator.power_up)
+		
 		# self._create_meteors()
 
 	def _update_stars(self):
@@ -241,6 +261,8 @@ class AlienInvasion:
 			# Create new fleet and center the ship
 			self._create_fleet()
 			self.ship.center_ship()
+			# self.generator.generate_power_up()
+			# self.power.add(self.generator.power_up)
 			# Pause.
 			sleep(0.5)
 		else:
@@ -248,6 +270,7 @@ class AlienInvasion:
 			self.meteors.empty()
 			self.aliens.empty()
 			self.bullets.empty()
+			self.power.empty()
 			self.stats.lives_left = 0
 			self.sb.prep_lives()
 			self.ship.center_ship()
@@ -339,9 +362,9 @@ class AlienInvasion:
 			self.bullets.empty()
 			self._create_fleet()
 			self.settings.increase_speed()
-
-			# **** power up testing *****
 			self.generator.generate_power_up()
+			self.power.add(self.generator.power_up)
+			# **** power up testing *****
 			
 			# Increase level
 			self.stats.level += 1
@@ -369,16 +392,21 @@ class AlienInvasion:
 		self.ship.blitme()
 		for bullet in self.bullets.sprites():
 			bullet.draw_bullet()
+		self.power.update()
+		for power_up in self.power.sprites():
+			# power_up.update()
+			power_up.prep_power_up()
+			power_up.draw_power_up()
 		self.aliens.draw(self.screen)
 		self.meteors.draw(self.screen)
 		# Draw the score info
 		self.sb.show_score()
 
 		# ****** testing power ups *******
-	
-		self.generator.power_up.rect.y += 1
-		self.generator.power_up.prep_power_up()
-		self.generator.power_up.draw_power_up()
+
+		# self.generator.power_up.rect.y += 1
+		# self.generator.power_up.prep_power_up()
+		# self.generator.power_up.draw_power_up()
 
 
 		# Draw the play button if the game is inactive

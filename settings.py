@@ -49,6 +49,7 @@ class Settings:
 
 		# Meteor
 		self.meteor_amount = 2
+		self.meteor_default = 2
 		# self.meteor_count = 0
 
 		# How quickly game speeds up
