@@ -1,7 +1,6 @@
 import sys
 import pygame
 import time
-from random import randint
 from settings import Settings
 from ship import Ship
 from bullets import Bullet
@@ -16,6 +15,8 @@ from game_over import GameOver
 from power_ups import PowerUp
 from bullet_power_up import BulletPowerUp
 from life_power_up import LifePowerUp
+from generator import Generator
+from meteor import Meteor
 
 fps = 120
 clock = pygame.time.Clock()
@@ -38,6 +39,7 @@ class AlienInvasion:
 		self.ship = Ship(self)
 		self.bullets = pygame.sprite.Group()
 		self.aliens = pygame.sprite.Group()
+		self.meteors = pygame.sprite.Group()
 		
 		self.play_button = Button(self, "Play")
 		self.instructions = Instructions(self)
@@ -45,21 +47,35 @@ class AlienInvasion:
 		self.power_up = PowerUp(self)
 		self.power_bullet = BulletPowerUp(self)
 		self.power_life = LifePowerUp(self)
-		self.p_ups = [self.power_up, self.power_bullet, self.power_life]
-		self.p = randint(0, 2)
+		self.generator = Generator(self)
 
 	def run_game(self):
 		"""Start the main loop for the game"""
 		while True:
 			self._check_events()
-			self._update_stars()
+	
 			if self.stats.game_active == True:
 				self.stats.game_run = True
 				self.ship.update()
+				self._update_meteor()
 				self._update_bullets()
 				self._update_aliens()
 			clock.tick(fps)
 			self._update_screen()
+
+	def _update_meteor(self):
+		if pygame.sprite.spritecollideany(self.ship, self.meteors):
+			self._ship_hit()
+		while self.settings.meteor_count < self.settings.meteor_amount:
+			m = Meteor(self)
+			self.meteors.add(m)
+			self.settings.meteor_count += 1
+
+		for meteor in self.meteors.sprites():
+			meteor.update()
+			if meteor.y >= self.settings.screen_height:
+				meteor.kill()
+				self.settings.meteor_count -= 1
 			
 	def _check_events(self):
 		"""Respond to keypresses and mouse"""
@@ -286,7 +302,9 @@ class AlienInvasion:
 			self.bullets.empty()
 			self._create_fleet()
 			self.settings.increase_speed()
-			self.p = randint(0, 2)
+
+			# **** power up testing *****
+			self.generator.generate_power_up()
 			
 			# Increase level
 			self.stats.level += 1
@@ -308,24 +326,25 @@ class AlienInvasion:
 	def _update_screen(self):
 		"""Update images on screen, flip to the new screen."""
 		self.screen.fill(self.settings.bg_colour)
+		self._update_stars()
 		for star in self.stars.sprites():
 			star.draw_star()
 		self.ship.blitme()
 		for bullet in self.bullets.sprites():
 			bullet.draw_bullet()
 		self.aliens.draw(self.screen)
+		# for meteor in self.meteors.sprites():
+		# 	meteor.update()
+		self.meteors.draw(self.screen)
 		# Draw the score info
 		self.sb.show_score()
 
-		# self.power_bullet.rect.y += 1
-		# self.power_bullet.prep_power_up()
-		# self.power_bullet.draw_power_up()
-		# self.power_up.rect.y += 1
-		# self.power_up.prep_power_up()
-		# self.power_up.draw_power_up()
-		self.p_ups[self.p].rect.y += 1
-		self.p_ups[self.p].prep_power_up()
-		self.p_ups[self.p].draw_power_up()
+		# ****** testing power ups *******
+	
+		self.generator.power_up.rect.y += 1
+		self.generator.power_up.prep_power_up()
+		self.generator.power_up.draw_power_up()
+
 
 		# Draw the play button if the game is inactive
 		if not self.stats.game_active:

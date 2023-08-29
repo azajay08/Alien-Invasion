@@ -48,6 +48,10 @@ class Settings:
 		self.p_bullet_colour = orange
 		self.p_bullet_count = 50
 
+		# Meteor
+		self.meteor_amount = 2
+		self.meteor_count = 0
+
 		# How quickly game speeds up
 		self.speedup_scale = 1.2
 		# How quickly the alien point value increases

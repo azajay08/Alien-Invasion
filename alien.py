@@ -2,8 +2,8 @@ import pygame
 import os
 from pygame.sprite import Sprite
 
-p = os.path.dirname(os.path.abspath(__file__))
-alien_ship_image = pygame.image.load(os.path.join(p, 'images', "spaceship.bmp"))
+path = os.path.dirname(os.path.abspath(__file__))
+alien_ship_image = pygame.image.load(os.path.join(path, 'images', "spaceship.bmp"))
 alien_ship = pygame.transform.scale(alien_ship_image, (50, 30))
 
 class Alien(Sprite):
@@ -19,7 +19,6 @@ class Alien(Sprite):
 		self.image = alien_ship
 		self.rect = self.image.get_rect()
 
-		# Start each new alien near the top left of the screen
 		self.rect.x = self.rect.width
 		self.rect.y = self.rect.height
 
