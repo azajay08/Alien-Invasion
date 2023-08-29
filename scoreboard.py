@@ -80,7 +80,7 @@ class Scoreboard:
 
 	def prep_lives(self):
 		"""Turn lives into rendered image"""
-		lives = str(self.stats.ships_left)
+		lives = str(self.stats.lives_left)
 		lives_str = "Lives:{:}".format(lives)
 		self.lives_image = self.font_lives.render(lives_str, True,
 						self.lives_text_colour, self.settings.bg_colour)

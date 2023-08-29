@@ -38,7 +38,7 @@ class Meteor(Sprite):
 		"""Moves stars in downwards direction"""
 		self.y += self.speed
 		self.rect.y = self.y
-		if self.y >= self.settings.screen_height:
-			self.y = 0
+		# if self.y >= self.settings.screen_height:
+		# 	self.y = 0
 
 	

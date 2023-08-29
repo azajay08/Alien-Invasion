@@ -57,25 +57,61 @@ class AlienInvasion:
 			if self.stats.game_active == True:
 				self.stats.game_run = True
 				self.ship.update()
-				self._update_meteor()
+				self._update_power_up()
+				self._create_meteors()
+				self._update_meteors()
 				self._update_bullets()
 				self._update_aliens()
 			clock.tick(fps)
 			self._update_screen()
 
-	def _update_meteor(self):
-		if pygame.sprite.spritecollideany(self.ship, self.meteors):
+	def _update_power_up(self):
+		if pygame.sprite.collide_rect(self.ship, self.generator.power_up):
 			self._ship_hit()
-		while self.settings.meteor_count < self.settings.meteor_amount:
+			self.generator.power_up.kill()
+
+	def _check_meteor_collisions(self):
+		ship_collisions = pygame.sprite.spritecollide(
+			self.ship, self.meteors, False)
+		if ship_collisions:
+			for sprite in ship_collisions:
+				self.meteors.remove(sprite)
+			# self._ship_hit()
+			if self.stats.lives_left > 1:
+				self.stats.lives_left -= 1
+				self.sb.prep_lives()
+				# self.settings.meteor_count -= 1
+			else:
+				# Sets game inactive
+				self.meteors.empty()
+				# self.settings.meteor_count = 0
+				self.aliens.empty()
+				self.bullets.empty()
+				self.stats.lives_left = 0
+				self.sb.prep_lives()
+				self.ship.center_ship()
+				self.stats.game_active = False
+				pygame.mouse.set_visible(True)
+		bullet_collisions = pygame.sprite.groupcollide(
+			self.bullets, self.meteors, True, True)
+		if bullet_collisions:
+			for meteor in bullet_collisions:
+				self.meteors.remove(meteor)
+		
+	def _create_meteors(self):
+			
+		while len(self.meteors) < self.settings.meteor_amount:
 			m = Meteor(self)
 			self.meteors.add(m)
-			self.settings.meteor_count += 1
+			# self.settings.meteor_count += 1
 
+	def _update_meteors(self):
 		for meteor in self.meteors.sprites():
 			meteor.update()
 			if meteor.y >= self.settings.screen_height:
 				meteor.kill()
-				self.settings.meteor_count -= 1
+				# self.settings.meteor_count -= 1
+		self._check_meteor_collisions()
 			
 	def _check_events(self):
 		"""Respond to keypresses and mouse"""
@@ -167,6 +203,7 @@ class AlienInvasion:
 		# Create new fleet and centers ship
 		self._create_fleet()
 		self.ship.center_ship()
+		# self._create_meteors()
 
 	def _update_stars(self):
 		"""Update star position"""
@@ -194,11 +231,10 @@ class AlienInvasion:
 
 	def _ship_hit(self):
 		"""Respond to ship being hit"""
-		# Decrement ships_left
-		if self.stats.ships_left > 1:
-			self.stats.ships_left -= 1
+		# Decrement lives_left
+		if self.stats.lives_left > 1:
+			self.stats.lives_left -= 1
 			self.sb.prep_lives()
-
 			# Get rid of any remaining aliens and bullets
 			self.aliens.empty()
 			self.bullets.empty()
@@ -209,9 +245,10 @@ class AlienInvasion:
 			sleep(0.5)
 		else:
 			# Sets game inactive
+			self.meteors.empty()
 			self.aliens.empty()
 			self.bullets.empty()
-			self.stats.ships_left = 0
+			self.stats.lives_left = 0
 			self.sb.prep_lives()
 			self.ship.center_ship()
 			self.stats.game_active = False
@@ -333,8 +370,6 @@ class AlienInvasion:
 		for bullet in self.bullets.sprites():
 			bullet.draw_bullet()
 		self.aliens.draw(self.screen)
-		# for meteor in self.meteors.sprites():
-		# 	meteor.update()
 		self.meteors.draw(self.screen)
 		# Draw the score info
 		self.sb.show_score()

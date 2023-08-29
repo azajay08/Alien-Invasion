@@ -17,7 +17,7 @@ class PowerUp(Sprite):
 		self.screen_rect = self.screen.get_rect()
 		self.screen_width = self.settings.screen_width
 
-		self.width, self.height = 15, 15
+		self.width, self.height = 10, 10
 		self.text_colour = white
 		self.square_colour = red
 		self.font = pygame.font.Font(retro_font, 20)

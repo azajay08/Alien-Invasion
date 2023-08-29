@@ -20,7 +20,7 @@ class Settings:
 		self.bg_colour = black
 
 		# ship settings
-		self.ship_limit = 3
+		self.lives = 3
 
 		# Bullet settings
 		self.bullet_width = 5
@@ -44,16 +44,15 @@ class Settings:
 
 		# Power ups
 		self.p_bullet = False
-		self.test = False
 		self.p_bullet_colour = orange
 		self.p_bullet_count = 50
 
 		# Meteor
 		self.meteor_amount = 2
-		self.meteor_count = 0
+		# self.meteor_count = 0
 
 		# How quickly game speeds up
-		self.speedup_scale = 1.2
+		self.speedup_scale = 1.1
 		# How quickly the alien point value increases
 		self.score_scale = 1.5
 
@@ -84,5 +83,5 @@ class Settings:
 		self.ship_speed *= self.speedup_scale
 		self.bullet_speed *= self.speedup_scale
 		self.alien_speed *= self.speedup_scale
-
+		self.meteor_amount += 1
 		self.alien_points = int(self.alien_points * self.score_scale)
