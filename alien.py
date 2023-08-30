@@ -3,7 +3,7 @@ import os
 from pygame.sprite import Sprite
 
 path = os.path.dirname(os.path.abspath(__file__))
-alien_ship_image = pygame.image.load(os.path.join(path, 'images', "spaceship.bmp"))
+alien_ship_image = pygame.image.load(os.path.join(path, 'images', "alien.bmp"))
 alien_ship = pygame.transform.scale(alien_ship_image, (50, 30))
 
 class Alien(Sprite):

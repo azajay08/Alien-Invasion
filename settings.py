@@ -44,8 +44,11 @@ class Settings:
 
 		# Power ups
 		self.p_bullet = False
+		self.p_bullet_init = False
+		self.p_slow = False
+		self.p_slow_init = False
 		self.p_bullet_colour = orange
-		self.p_bullet_count = 50
+		self.p_bullet_count = 60
 
 		# Meteor
 		self.meteor_amount = 2

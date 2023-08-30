@@ -12,8 +12,8 @@ from button import Button
 from scoreboard import Scoreboard
 from instructions import Instructions
 from game_over import GameOver
-from power_ups import PowerUp
 from bullet_power_up import BulletPowerUp
+from slow_power_up import SlowPowerUp
 from life_power_up import LifePowerUp
 from generator import Generator
 from meteor import Meteor
@@ -23,7 +23,6 @@ clock = pygame.time.Clock()
 
 class AlienInvasion:
 	"""Overall class to manage game assets and behaviour"""
-
 	def __init__(self):
 		"""Initilize the game and resources"""
 		pygame.init()
@@ -40,16 +39,15 @@ class AlienInvasion:
 		self.bullets = pygame.sprite.Group()
 		self.aliens = pygame.sprite.Group()
 		self.meteors = pygame.sprite.Group()
-		self.power = pygame.sprite.Group()
+		self.power_ups = pygame.sprite.Group()
 		
 		self.play_button = Button(self, "Play")
 		self.instructions = Instructions(self)
 		self.game_over = GameOver(self)
-		self.power_up = PowerUp(self)
-		self.power_bullet = BulletPowerUp(self)
-		self.power_life = LifePowerUp(self)
 		self.generator = Generator(self)
+		self._star_launch()
 
+# Game Running Functions
 	def run_game(self):
 		"""Start the main loop for the game"""
 		while True:
@@ -67,67 +65,71 @@ class AlienInvasion:
 			clock.tick(fps)
 			self._update_screen()
 
-	def _update_power_up(self):
-		# if pygame.sprite.collide_rect(self.ship, self.generator.power_up):
-		# 	# self._ship_hit()
-		# 	self.generator.power_up.kill()
-		collisions = pygame.sprite.spritecollide(
-			self.ship, self.power, False)
-		if collisions:
-			for power in collisions:
-				if power.letter == "L":
-					self.stats.lives_left += 1
-					self.sb.prep_lives()
-				self.power.remove(power)
-		for power in self.power:
-			if power.rect.bottom <= 0:
-				self.power.remove(power)
-
-
-	def _check_meteor_collisions(self):
-		ship_collisions = pygame.sprite.spritecollide(
-			self.ship, self.meteors, False)
-		if ship_collisions:
-			for sprite in ship_collisions:
-				self.meteors.remove(sprite)
-			# self._ship_hit()
-			if self.stats.lives_left > 1:
-				self.stats.lives_left -= 1
-				self.sb.prep_lives()
-				# self.settings.meteor_count -= 1
+	def _update_screen(self):
+		"""Update images on screen, flip to the new screen."""
+		self.screen.fill(self.settings.bg_colour)
+		self.stars.update()
+		for star in self.stars.sprites():
+			star.draw_star()
+		self.ship.blitme()
+		for bullet in self.bullets.sprites():
+			bullet.draw_bullet()
+		self.power_ups.update()
+		for power_up in self.power_ups.sprites():
+			power_up.draw_power_up()
+		self.aliens.draw(self.screen)
+		self.meteors.draw(self.screen)
+		# Draw the score info
+		self.sb.show_score()
+		# Draw the play button if the game is inactive
+		if not self.stats.game_active:
+			if self.stats.game_run == True:
+				self.game_over.draw_instructions()
 			else:
-				# Sets game inactive
-				self.meteors.empty()
-				self.power.empty()
-				# self.settings.meteor_count = 0
-				# self.aliens.empty()
-				self.bullets.empty()
-				self.stats.lives_left = 0
-				self.sb.prep_lives()
-				self.ship.center_ship()
-				self.stats.game_active = False
-				pygame.mouse.set_visible(True)
-		bullet_collisions = pygame.sprite.groupcollide(
-			self.bullets, self.meteors, True, True)
-		if bullet_collisions:
-			for meteor in bullet_collisions:
-				self.meteors.remove(meteor)
-		
-	def _create_meteors(self):
-			
-		while len(self.meteors) < self.settings.meteor_amount:
-			m = Meteor(self)
-			self.meteors.add(m)
-			# self.settings.meteor_count += 1
+				self.play_button.draw_button()
+				self.instructions.draw_instructions()
+		pygame.display.flip()
 
-	def _update_meteors(self):
-		for meteor in self.meteors.sprites():
-			meteor.update()
-			if meteor.y >= self.settings.screen_height:
-				meteor.kill()
-				# self.settings.meteor_count -= 1
-		self._check_meteor_collisions()
-			
+	def _start_game(self):
+		"""Starts the game"""
+		pygame.mixer.music.play(-1)
+		# Reset the game settings
+		self.settings.initialize_dynamic_settings()
+		self.stats.reset_stats()
+		self.settings.meteor_amount = self.settings.meteor_default
+		self.stats.game_active = True
+		self.sb.prep_score()
+		self.sb.prep_level()
+		self.sb.prep_lives()
+		# Hides the cursor
+		pygame.mouse.set_visible(False)
+		# Get rid of any remaining aliens and bullets
+		self.meteors.empty()
+		self.aliens.empty()
+		self.bullets.empty()
+		# Create new fleet and centers ship
+		self._create_fleet()
+		self.ship.center_ship()
+		self._create_power_up()
+
+	def _prep_next_level(self):
+		# Destroy existing bullets and create new fleet
+		self.bullets.empty()
+		self._create_fleet()
+		self.settings.increase_speed()
+		self._create_power_up()
+		# Increase level
+		self.stats.level += 1
+		self.sb.prep_level()
+
+# Star Functions
+	def _star_launch(self):
+		"""Create a new star and add it to the star group"""
+		while len(self.stars) < 300:
+			new_star = Star(self)
+			self.stars.add(new_star)
+
+# Event Functions
 	def _check_events(self):
 		"""Respond to keypresses and mouse"""
 		for event in pygame.event.get():
@@ -141,6 +143,7 @@ class AlienInvasion:
 				self._check_keyup_events(event)
 
 	def _check_inactive_events(self, event):
+		# checks the key events after a restarted game
 		if self.stats.game_run == True:
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_RETURN:
@@ -157,7 +160,6 @@ class AlienInvasion:
 			elif event.key == pygame.K_q:
 				sys.exit()
 
-	
 	def _check_keydown_events(self, event):
 		"""Respond to key presses"""
 		if event.key == pygame.K_RIGHT:
@@ -200,55 +202,7 @@ class AlienInvasion:
 		elif event.key == pygame.K_s:
 			self.ship.moving_down = False
 
-	def _start_game(self):
-		"""Starts the game"""
-		pygame.mixer.music.play(-1)
-		# Reset the game settings
-		self.settings.initialize_dynamic_settings()
-		self.stats.reset_stats()
-		self.settings.meteor_amount = self.settings.meteor_default
-		self.stats.game_active = True
-		self.sb.prep_score()
-		self.sb.prep_level()
-		self.sb.prep_lives()
-		# Hides the cursor
-		pygame.mouse.set_visible(False)
-		# Get rid of any remaining aliens and bullets
-		self.meteors.empty()
-		self.aliens.empty()
-		self.bullets.empty()
-		# Create new fleet and centers ship
-		self._create_fleet()
-		self.ship.center_ship()
-		self.generator.generate_power_up()
-		self.power.add(self.generator.power_up)
-		
-		# self._create_meteors()
-
-	def _update_stars(self):
-		"""Update star position"""
-		self._star_launch()
-		self.stars.update()
-			# Checks if stars needs to be removed from screen
-		for star in self.stars.copy():
-			if star.rect.bottom <= 0:
-				self.stars.remove(star)
-
-	def _star_launch(self):
-		"""Create a new star and add it to the star group"""
-		if len(self.stars) < 300:
-			new_star = Star(self)
-			self.stars.add(new_star)
-
-	def _check_aliens_bottom(self):
-		"""Cheack if aliens have reached the bottom"""
-		screen_rect = self.screen.get_rect()
-		for alien in self.aliens.sprites():
-			if alien.rect.bottom >= screen_rect.bottom:
-				# Counts hit if aliens reach bottom
-				self._ship_hit()
-				break
-
+# Ship Functions
 	def _ship_hit(self):
 		"""Respond to ship being hit"""
 		# Decrement lives_left
@@ -258,11 +212,10 @@ class AlienInvasion:
 			# Get rid of any remaining aliens and bullets
 			self.aliens.empty()
 			self.bullets.empty()
+			self.meteors.empty()
 			# Create new fleet and center the ship
 			self._create_fleet()
 			self.ship.center_ship()
-			# self.generator.generate_power_up()
-			# self.power.add(self.generator.power_up)
 			# Pause.
 			sleep(0.5)
 		else:
@@ -270,12 +223,152 @@ class AlienInvasion:
 			self.meteors.empty()
 			self.aliens.empty()
 			self.bullets.empty()
-			self.power.empty()
+			self.power_ups.empty()
 			self.stats.lives_left = 0
 			self.sb.prep_lives()
 			self.ship.center_ship()
 			self.stats.game_active = False
 			pygame.mouse.set_visible(True)
+
+# Bullet Fucntions
+	def _update_bullets(self):
+		"""Update bullet pos"""
+		self.bullets.update()
+			# Get rid of bullets
+		for bullet in self.bullets.copy():
+			if bullet.rect.bottom <= 0:
+				self.bullets.remove(bullet)
+		self._check_bullet_alien_collision()
+
+	def _check_bullet_alien_collision(self):
+		"""Respond to bullet-alien collisions"""
+		# Remove any bullets and aliens that have collided.	
+		# Check for any bullets that hit - get rid 
+		collisions = pygame.sprite.groupcollide(
+			self.bullets, self.aliens, True, True)
+		if collisions:
+			for aliens in collisions.values():
+				self.stats.score += self.settings.alien_points * len(aliens)
+			self.sb.prep_score()
+			self.sb.check_high_score()
+		if not self.aliens:
+			self._prep_next_level()
+
+	def _fire_bullet(self):
+		"""Create a new bullet and add it to the bullets group"""
+		if len(self.bullets) < self.settings.bullet_count:
+			# Plays pew pew sound everytime a bullet is fired
+			pygame.mixer.Sound.play(self.settings.laser)
+			new_bullet = Bullet(self, self.settings.main_gun)
+			self.bullets.add(new_bullet)
+			if self.settings.p_bullet == True:
+				new_bullet = Bullet(self, self.settings.left_gun)
+				self.bullets.add(new_bullet)
+				new_bullet = Bullet(self, self.settings.right_gun)
+				self.bullets.add(new_bullet)
+
+# Power Up Functions
+	def _create_power_up(self):
+		self.generator.generate_power_up()
+		self.power_ups.add(self.generator.power_up)
+
+	def _update_power_up(self):
+		collisions = pygame.sprite.spritecollide(
+			self.ship, self.power_ups, False)
+		if collisions:
+			for power in collisions:
+				self._check_power_up(power)
+				self.power_ups.remove(power)
+		for power in self.power_ups:
+			if power.rect.bottom <= 0:
+				self.power_ups.remove(power)
+		if self.settings.p_slow:
+			self.current_time = pygame.time.get_ticks()
+			self._initiate_slow_power_up()
+		if self.settings.p_bullet:
+			self.current_time = pygame.time.get_ticks()
+			self._initiate_bullet_power_up()
+			self.current_time = pygame.time.get_ticks()
+	
+	def _initiate_bullet_power_up(self):
+		if not self.settings.p_bullet_init:
+			self.temp_bullet_count = self.settings.bullet_count
+			self.settings.bullet_count = self.settings.p_bullet_count
+			self.settings.p_bullet_init = True
+		if self.current_time - self.bullet_timer > 10000: 
+			self.settings.p_bullet = False
+			self.settings.p_bullet_init = False
+			self.settings.bullet_count = self.temp_bullet_count
+			
+	def _initiate_slow_power_up(self):
+		# self.current_time = pygame.time.get_ticks()
+		if not self.settings.p_slow_init:
+			self.temp_speed = self.settings.alien_speed
+			self.settings.alien_speed /= 2
+			self.settings.p_slow_init = True
+		if self.current_time - self.slow_timer > 10000: 
+			self.settings.p_slow = False
+			self.settings.p_slow_init = False
+			self.settings.alien_speed = self.temp_speed
+
+	def _check_power_up(self, power_up):
+		if isinstance(power_up, LifePowerUp):
+			self.stats.lives_left += 1
+			self.sb.prep_lives()
+		elif isinstance(power_up, SlowPowerUp):
+			self.slow_timer = pygame.time.get_ticks()
+			self.settings.p_slow = True
+		elif isinstance(power_up, BulletPowerUp):
+			self.bullet_timer = pygame.time.get_ticks()
+			self.settings.p_bullet = True
+
+# Meteor Fucntions
+	def _check_meteor_collisions(self):
+		ship_collisions = pygame.sprite.spritecollide(
+			self.ship, self.meteors, False)
+		if ship_collisions:
+			for sprite in ship_collisions:
+				self.meteors.remove(sprite)
+			if self.stats.lives_left > 1:
+				self.stats.lives_left -= 1
+				self.sb.prep_lives()
+			else:
+				# Sets game inactive
+				self.meteors.empty()
+				self.power_ups.empty()
+				self.bullets.empty()
+				self.stats.lives_left = 0
+				self.sb.prep_lives()
+				self.ship.center_ship()
+				self.stats.game_active = False
+				pygame.mouse.set_visible(True)
+		bullet_collisions = pygame.sprite.groupcollide(
+			self.bullets, self.meteors, True, True)
+		if bullet_collisions:
+			for meteor in bullet_collisions:
+				self.meteors.remove(meteor)
+		
+	def _create_meteors(self):
+		while len(self.meteors) < self.settings.meteor_amount:
+			m = Meteor(self)
+			self.meteors.add(m)
+
+	def _update_meteors(self):
+		for meteor in self.meteors.sprites():
+			meteor.update()
+			if meteor.y >= self.settings.screen_height:
+				self.meteors.remove(meteor)
+		self._check_meteor_collisions()
+
+# Alien Fucntions
+	def _check_aliens_bottom(self):
+		"""Cheack if aliens have reached the bottom"""
+		screen_rect = self.screen.get_rect()
+		for alien in self.aliens.sprites():
+			if alien.rect.bottom >= screen_rect.bottom:
+				# Counts hit if aliens reach bottom
+				self._ship_hit()
+				break
 
 	def _update_aliens(self):
 		"""check fleet edge, update pos"""
@@ -326,97 +419,6 @@ class AlienInvasion:
 		alien.rect.x = alien.x
 		alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number + 30
 		self.aliens.add(alien)
-
-	def _update_bullets(self):
-		"""Update bullet pos"""
-		# Work in progress, timing the power up testing
-		# if self.stats.score > 1000 and self.settings.test == False: 
-		# 	self.settings.p_bullet = True
-		# 	self.settings.test = True
-		# 	self.power_timer = pygame.time.get_ticks()
-		# if self.settings.p_bullet:
-		# 	self.current_time = pygame.time.get_ticks()
-		# 	self.settings.bullet_count = self.settings.p_bullet_count
-		# 	if self.current_time - self.power_timer > 5000: 
-		# 		self.settings.p_bullet = False
-		self.bullets.update()
-			# Get rid of bullets
-		for bullet in self.bullets.copy():
-			if bullet.rect.bottom <= 0:
-				self.bullets.remove(bullet)
-		self._check_bullet_alien_collision()
-
-	def _check_bullet_alien_collision(self):
-		"""Respond to bullet-alien collisions"""
-		# Remove any bullets and aliens that have collided.	
-		# Check for any bullets that hit - get rid 
-		collisions = pygame.sprite.groupcollide(
-			self.bullets, self.aliens, True, True)
-		if collisions:
-			for aliens in collisions.values():
-				self.stats.score += self.settings.alien_points * len(aliens)
-			self.sb.prep_score()
-			self.sb.check_high_score()
-		if not self.aliens:
-			# Destroy existing bullets and create new fleet
-			self.bullets.empty()
-			self._create_fleet()
-			self.settings.increase_speed()
-			self.generator.generate_power_up()
-			self.power.add(self.generator.power_up)
-			# **** power up testing *****
-			
-			# Increase level
-			self.stats.level += 1
-			self.sb.prep_level()
-
-	def _fire_bullet(self):
-		"""Create a new bullet and add it to the bullets group"""
-		if len(self.bullets) < self.settings.bullet_count:
-			# Plays pew pew sound everytime a bullet is fired
-			pygame.mixer.Sound.play(self.settings.laser)
-			new_bullet = Bullet(self, self.settings.main_gun)
-			self.bullets.add(new_bullet)
-			if self.settings.p_bullet == True:
-				new_bullet = Bullet(self, self.settings.left_gun)
-				self.bullets.add(new_bullet)
-				new_bullet = Bullet(self, self.settings.right_gun)
-				self.bullets.add(new_bullet)
-
-	def _update_screen(self):
-		"""Update images on screen, flip to the new screen."""
-		self.screen.fill(self.settings.bg_colour)
-		self._update_stars()
-		for star in self.stars.sprites():
-			star.draw_star()
-		self.ship.blitme()
-		for bullet in self.bullets.sprites():
-			bullet.draw_bullet()
-		self.power.update()
-		for power_up in self.power.sprites():
-			# power_up.update()
-			power_up.prep_power_up()
-			power_up.draw_power_up()
-		self.aliens.draw(self.screen)
-		self.meteors.draw(self.screen)
-		# Draw the score info
-		self.sb.show_score()
-
-		# ****** testing power ups *******
-
-		# self.generator.power_up.rect.y += 1
-		# self.generator.power_up.prep_power_up()
-		# self.generator.power_up.draw_power_up()
-
-
-		# Draw the play button if the game is inactive
-		if not self.stats.game_active:
-			if self.stats.game_run == True:
-				self.game_over.draw_instructions()
-			else:
-				self.play_button.draw_button()
-				self.instructions.draw_instructions()
-		pygame.display.flip()
 
 if __name__ == '__main__':
 	ai = AlienInvasion()

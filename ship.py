@@ -4,7 +4,7 @@ import os
 
 image_path = os.path.dirname(os.path.abspath(__file__))
 
-jet_image = pygame.image.load(os.path.join(image_path, 'images', 'space.bmp'))
+jet_image = pygame.image.load(os.path.join(image_path, 'images', 'ship.bmp'))
 jet = pygame.transform.scale(jet_image, (60, 80))
 
 class Ship:
