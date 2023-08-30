@@ -10,5 +10,5 @@ class LifePowerUp(PowerUp):
 	"""A class that represents a life power up"""
 	def __init__(self, ai_game):
 		super().__init__(ai_game)
-		self.square_colour = red
+		self.power_up_colour = red
 		self.letter = "L"

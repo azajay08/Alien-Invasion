@@ -33,6 +33,7 @@ class Settings:
 
 		# Alien settings
 		self.fleet_drop_speed = 10
+		self.alien_default_speed = 1.0
 		
 		# stars
 		self.star_colour = white
@@ -74,7 +75,7 @@ class Settings:
 		"""Init settings that change through the game"""
 		self.ship_speed = 2
 		self.bullet_speed = 3.0
-		self.alien_speed = 1.0
+		self.alien_speed = self.alien_default_speed
 
 		# Fleet direction of 1 represents right: -1 left
 		self.fleet_direction = 1

@@ -45,6 +45,8 @@ class AlienInvasion:
 		self.instructions = Instructions(self)
 		self.game_over = GameOver(self)
 		self.generator = Generator(self)
+		self.bullet_power_up = BulletPowerUp(self)
+		self.slow_power_up = SlowPowerUp(self)
 		self._star_launch()
 
 # Star Functions
@@ -86,6 +88,11 @@ class AlienInvasion:
 			power_up.draw_power_up()
 		self.aliens.draw(self.screen)
 		self.meteors.draw(self.screen)
+		if self.settings.p_bullet:
+			self.bullet_power_up.draw_power_up_text()
+		if self.settings.p_slow:
+			self.slow_power_up.draw_power_up_text()
+
 		# Draw the score info
 		self.sb.show_score()
 		# Draw the play button if the game is inactive
@@ -115,12 +122,17 @@ class AlienInvasion:
 		self.aliens.empty()
 		self.bullets.empty()
 		# Create new fleet and centers ship
-		self._create_fleet()
 		self.ship.center_ship()
+		self._kill_ship_movement()
+		self._create_fleet()
 		self._create_power_up()
+		self.settings.p_bullet = False
+		self.settings.p_slow = False
 
 	def _prep_next_level(self):
 		# Destroy existing bullets and create new fleet
+		self.ship.center_ship()
+		self.meteors.empty()
 		self.bullets.empty()
 		self._create_fleet()
 		self.settings.increase_speed()
@@ -148,7 +160,7 @@ class AlienInvasion:
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_RETURN:
 					self.stats.game_run = False
-				elif event.key == pygame.K_q:
+				elif event.key == pygame.K_ESCAPE:
 					sys.exit()
 		elif event.type == pygame.MOUSEBUTTONDOWN:
 			mouse_pos = pygame.mouse.get_pos()
@@ -157,7 +169,7 @@ class AlienInvasion:
 		elif event.type == pygame.KEYDOWN:
 			if event.key == pygame.K_SPACE:
 				self._start_game()
-			elif event.key == pygame.K_q:
+			elif event.key == pygame.K_ESCAPE:
 				sys.exit()
 
 	def _check_keydown_events(self, event):
@@ -178,7 +190,7 @@ class AlienInvasion:
 			self.ship.moving_up = True
 		elif event.key == pygame.K_s:
 			self.ship.moving_down = True
-		elif event.key == pygame.K_q:
+		elif event.key == pygame.K_ESCAPE:
 			sys.exit()
 		elif event.key == pygame.K_SPACE:
 			self._fire_bullet()
@@ -214,8 +226,8 @@ class AlienInvasion:
 			self.bullets.empty()
 			self.meteors.empty()
 			# Create new fleet and center the ship
-			self._create_fleet()
 			self.ship.center_ship()
+			self._create_fleet()
 			# Pause.
 			sleep(0.5)
 		else:
@@ -227,8 +239,17 @@ class AlienInvasion:
 			self.stats.lives_left = 0
 			self.sb.prep_lives()
 			self.ship.center_ship()
+			self._kill_ship_movement()
+			self.settings.p_bullet = False
+			self.settings.p_slow = False
 			self.stats.game_active = False
 			pygame.mouse.set_visible(True)
+
+	def _kill_ship_movement(self):
+		self.ship.moving_right = False
+		self.ship.moving_left = False
+		self.ship.moving_up = False
+		self.ship.moving_down = False
 
 # Bullet Fucntions
 	def _update_bullets(self):
@@ -268,10 +289,6 @@ class AlienInvasion:
 				self.bullets.add(new_bullet)
 
 # Power Up Functions
-	def _create_power_up(self):
-		self.generator.generate_power_up()
-		self.power_ups.add(self.generator.power_up)
-
 	def _update_power_up(self):
 		collisions = pygame.sprite.spritecollide(
 			self.ship, self.power_ups, False)
@@ -288,8 +305,22 @@ class AlienInvasion:
 		if self.settings.p_bullet:
 			self.current_time = pygame.time.get_ticks()
 			self._initiate_bullet_power_up()
-			self.current_time = pygame.time.get_ticks()
+
+	def _create_power_up(self):
+		self.generator.generate_power_up()
+		self.power_ups.add(self.generator.power_up)
 	
+	def _check_power_up(self, power_up):
+		if isinstance(power_up, LifePowerUp):
+			self.stats.lives_left += 1
+			self.sb.prep_lives()
+		elif isinstance(power_up, SlowPowerUp):
+			self.slow_timer = pygame.time.get_ticks()
+			self.settings.p_slow = True
+		elif isinstance(power_up, BulletPowerUp):
+			self.bullet_timer = pygame.time.get_ticks()
+			self.settings.p_bullet = True
+
 	def _initiate_bullet_power_up(self):
 		if not self.settings.p_bullet_init:
 			self.temp_bullet_count = self.settings.bullet_count
@@ -302,6 +333,8 @@ class AlienInvasion:
 			
 	def _initiate_slow_power_up(self):
 		# self.current_time = pygame.time.get_ticks()
+		slow_power_up = SlowPowerUp(self)
+		slow_power_up.draw_power_up_text()
 		if not self.settings.p_slow_init:
 			self.temp_speed = self.settings.alien_speed
 			self.settings.alien_speed /= 2
@@ -310,17 +343,6 @@ class AlienInvasion:
 			self.settings.p_slow = False
 			self.settings.p_slow_init = False
 			self.settings.alien_speed = self.temp_speed
-
-	def _check_power_up(self, power_up):
-		if isinstance(power_up, LifePowerUp):
-			self.stats.lives_left += 1
-			self.sb.prep_lives()
-		elif isinstance(power_up, SlowPowerUp):
-			self.slow_timer = pygame.time.get_ticks()
-			self.settings.p_slow = True
-		elif isinstance(power_up, BulletPowerUp):
-			self.bullet_timer = pygame.time.get_ticks()
-			self.settings.p_bullet = True
 
 # Meteor Fucntions
 	def _check_meteor_collisions(self):

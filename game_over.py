@@ -26,12 +26,15 @@ class GameOver:
 
 		self.go_rect = pygame.Rect(0, 0, self.width, self.height)
 		self.go_rect.center = self.screen_rect.center
-		self.go_rect.centery = self.screen_rect.centery - 200
+		self.go_rect.centery = self.screen_rect.centery - 150
 		self.score_rect = pygame.Rect(0, 0, self.width, self.height)
 		self.score_rect.center = self.screen_rect.center
-		self.instructions_rect = pygame.Rect(0, 0, self.width, self.height)
-		self.instructions_rect.center = self.screen_rect.center
-		self.instructions_rect.centery = self.screen_rect.centery + 200
+		self.instructions_rect1 = pygame.Rect(0, 0, self.width, self.height)
+		self.instructions_rect1.center = self.screen_rect.center
+		self.instructions_rect1.centery = self.screen_rect.centery + 100
+		self.instructions_rect2 = pygame.Rect(0, 0, self.width, self.height)
+		self.instructions_rect2.center = self.screen_rect.center
+		self.instructions_rect2.centery = self.screen_rect.centery + 200
 
 		# The button message needs to be prepped only once
 		self._prep_msg()
@@ -41,17 +44,22 @@ class GameOver:
 		go_str = "GAME OVER!"
 		rounded_score = round(self.stats.score)
 		score_str = "Score:{:,}".format(rounded_score)
-		instructions_str = "Press 'RETURN' to return to main menu, press 'Q' to quit"
+		instructions_str1 = "Press 'RETURN' to return to main menu"
+		instructions_str2 = "Press 'escape' to quit"
 		self.go_image = self.game_over_font.render(go_str, True, red, black)
 		self.go_image_rect = self.go_image.get_rect()
 		self.go_image_rect.center = self.go_rect.center
 		self.score_image = self.score_font.render(score_str, True, yellow, black)
 		self.score_image_rect = self.score_image.get_rect()
 		self.score_image_rect.center = self.score_rect.center
-		self.instructions_image = self.instructions_font.render(instructions_str,
+		self.instructions_image1 = self.instructions_font.render(instructions_str1,
 			True, deep_pink, black)
-		self.instructions_image_rect = self.instructions_image.get_rect()
-		self.instructions_image_rect.center = self.instructions_rect.center
+		self.instructions_image_rect1 = self.instructions_image1.get_rect()
+		self.instructions_image_rect1.center = self.instructions_rect1.center
+		self.instructions_image2 = self.instructions_font.render(instructions_str2,
+			True, deep_pink, black)
+		self.instructions_image_rect2 = self.instructions_image2.get_rect()
+		self.instructions_image_rect2.center = self.instructions_rect2.center
 
 
 	def draw_instructions(self):
@@ -60,4 +68,5 @@ class GameOver:
 		self._prep_msg()
 		self.screen.blit(self.go_image, self.go_image_rect)
 		self.screen.blit(self.score_image, self.score_image_rect)
-		self.screen.blit(self.instructions_image, self.instructions_image_rect)
+		self.screen.blit(self.instructions_image1, self.instructions_image_rect1)
+		self.screen.blit(self.instructions_image2, self.instructions_image_rect2)
