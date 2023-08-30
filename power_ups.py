@@ -23,7 +23,6 @@ class PowerUp(Sprite):
 		self.power_up_colour = red
 		self.font = pygame.font.Font(retro_font, 20)
 		self.rect = pygame.Rect((randint(0 , self.screen_width)), 0, self.width, self.height)
-		# self.rect.midtop = self.screen_rect.midtop
 		self.letter = "P"
 		self.power_up_name = "Power"
 		self.prep_letter()
@@ -37,7 +36,6 @@ class PowerUp(Sprite):
 
 	def draw_power_up(self):
 		"""Draw blank button and then draw message"""
-		# self.screen.fill(self.square_colour, self.rect)
 		self.prep_letter()
 		pygame.draw.circle(self.screen, self.power_up_colour, self.rect.center, 15, 15)
 		self.screen.blit(self.letter_image, self.letter_rect)

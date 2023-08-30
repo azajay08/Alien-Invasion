@@ -91,7 +91,6 @@ class AlienInvasion:
 			self.bullet_power_up.draw_power_up_text()
 		if self.settings.p_slow:
 			self.slow_power_up.draw_power_up_text()
-
 		# Draw the score info
 		self.sb.show_score()
 		# Draw the play button if the game is inactive
@@ -254,7 +253,7 @@ class AlienInvasion:
 	def _update_bullets(self):
 		"""Update bullet pos"""
 		self.bullets.update()
-			# Get rid of bullets
+		# Gets rid of bullets
 		for bullet in self.bullets.copy():
 			if bullet.rect.bottom <= 0:
 				self.bullets.remove(bullet)
@@ -331,7 +330,6 @@ class AlienInvasion:
 			self.settings.bullet_count = self.temp_bullet_count
 			
 	def _initiate_slow_power_up(self):
-		# self.current_time = pygame.time.get_ticks()
 		slow_power_up = SlowPowerUp(self)
 		slow_power_up.draw_power_up_text()
 		if not self.settings.p_slow_init:

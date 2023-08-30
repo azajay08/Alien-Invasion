@@ -64,7 +64,6 @@ class GameOver:
 
 	def draw_instructions(self):
 		"""Draws the images of the end game strings"""
-		# self.screen.fill(None, self.rect)
 		self._prep_msg()
 		self.screen.blit(self.go_image, self.go_image_rect)
 		self.screen.blit(self.score_image, self.score_image_rect)

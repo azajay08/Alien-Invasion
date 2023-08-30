@@ -55,7 +55,6 @@ class Instructions:
 
 	def draw_instructions(self):
 		"""Draws the image of the instruction strings"""
-		# self.screen.fill(None, self.rect)
 		self.screen.blit(self.msg_image1, self.msg_image_rect1)
 		self.screen.blit(self.msg_image2, self.msg_image_rect2)
 		self.screen.blit(self.msg_image3, self.msg_image_rect3)

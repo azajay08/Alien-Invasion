@@ -23,21 +23,11 @@ class Meteor(Sprite):
 		self.rect.y = self.rect.height
 		self.rect = pygame.Rect(randint(0 , self.settings.screen_width),
 			randint(-100 , 0),self.rect.width, self.rect.height)
-		# self.y = float(self.rect.y)
-		# self.x = randint(0 , self.settings.screen_width)
-		# self.y = randint(-20 , 0)
 		speed = randint(5, 25)
 		self.speed = float(speed / 10.0)
 		self.y = float(self.rect.y)
 
-		# Start each new alien near the top left of the screen
-		# self.rect.x = self.rect.width
-		# self.rect.y = self.rect.height
 	def update(self):
 		"""Moves stars in downwards direction"""
 		self.y += self.speed
 		self.rect.y = self.y
-		# if self.y >= self.settings.screen_height:
-		# 	self.y = 0
-
-	
