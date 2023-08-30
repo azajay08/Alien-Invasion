@@ -47,6 +47,13 @@ class AlienInvasion:
 		self.generator = Generator(self)
 		self._star_launch()
 
+# Star Functions
+	def _star_launch(self):
+		"""Create a new star and add it to the star group"""
+		while len(self.stars) < 300:
+			new_star = Star(self)
+			self.stars.add(new_star)
+
 # Game Running Functions
 	def run_game(self):
 		"""Start the main loop for the game"""
@@ -121,13 +128,6 @@ class AlienInvasion:
 		# Increase level
 		self.stats.level += 1
 		self.sb.prep_level()
-
-# Star Functions
-	def _star_launch(self):
-		"""Create a new star and add it to the star group"""
-		while len(self.stars) < 300:
-			new_star = Star(self)
-			self.stars.add(new_star)
 
 # Event Functions
 	def _check_events(self):
