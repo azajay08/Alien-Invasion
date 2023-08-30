@@ -1,6 +1,5 @@
 import sys
 import pygame
-import time
 from settings import Settings
 from ship import Ship
 from bullets import Bullet

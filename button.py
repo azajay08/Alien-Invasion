@@ -10,9 +10,6 @@ dark_pink = (139,10,80)
 font_path = os.path.dirname(os.path.abspath(__file__))
 retro_font = os.path.join(font_path, 'fonts', 'Robot9000.ttf')
 
-# font_path = "Python_work/alien_invasion/robot-9000-font/Robot9000.ttf"
-# test_font = "Python_work/disco-duck-font/Disco.otf"
-
 class Button:
 
 	def __init__(self, ai_game, msg):

@@ -2,7 +2,6 @@ import pygame
 from pygame.sprite import Sprite
 from random import randint
 
-
 class Star(Sprite):
 
 	def __init__(self, ai_game):

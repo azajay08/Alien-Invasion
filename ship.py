@@ -1,7 +1,6 @@
 import pygame
 import os
 
-
 image_path = os.path.dirname(os.path.abspath(__file__))
 
 jet_image = pygame.image.load(os.path.join(image_path, 'images', 'ship.bmp'))

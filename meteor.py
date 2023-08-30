@@ -3,7 +3,6 @@ import os
 from pygame.sprite import Sprite
 from random import randint
 
-
 path = os.path.dirname(os.path.abspath(__file__))
 meteor_image = pygame.image.load(os.path.join(path, 'images', "meteor.bmp"))
 meteor = pygame.transform.scale(meteor_image, (20, 40))
